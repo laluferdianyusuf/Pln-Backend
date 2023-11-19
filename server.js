@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const upload = require("./utils/fileUpload");
+const path = require("path");
 const fs = require("fs");
 
 const app = express();
@@ -66,7 +67,7 @@ cron.schedule("0 0 1 * *", async () => {
     const user = await userRepository.getUsersByReportType("BULANAN");
 
     for (const users of user) {
-      await userRepository.deleteUserById(users.id);
+      await userRepository.deleteUsers();
       await reportRepository.deleteReport("BULANAN");
     }
 

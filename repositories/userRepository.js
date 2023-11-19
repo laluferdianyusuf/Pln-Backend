@@ -227,14 +227,12 @@ class UserRepository {
     }
   }
 
-  static async deleteUserById(userId) {
+  static async deleteUsers() {
     try {
-      const deletedUser = await prisma.user.delete({
-        where: { id: userId },
-      });
+      const deletedUser = await prisma.dailyRecapt.deleteMany();
       return deletedUser;
     } catch (error) {
-      console.error(`Error deleting user with ID (${userId}):`, error);
+      console.error(`Error deleting user:`, error);
       throw error;
     }
   }
