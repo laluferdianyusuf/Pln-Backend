@@ -197,7 +197,7 @@ class UserService {
       if (!getUser) {
         return {
           status_info: false,
-          status_code: 404,
+          status_code: 400,
           message: "Invalid Email Try Again",
           data: {
             user: null,
