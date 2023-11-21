@@ -224,6 +224,7 @@ class UserService {
             message: "Login successful",
             data: {
               token,
+              getUser,
             },
           };
         } else {
