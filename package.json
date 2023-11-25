@@ -24,8 +24,7 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "server.js"
+    "start": "node server.js"
   },
   "devDependencies": {
     "prisma": "^5.4.2"
