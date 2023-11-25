@@ -15,14 +15,14 @@ class ReportService {
         return {
           status_info: false,
           status_code: 401,
-          message: "Your Report Status is Waiting",
+          message: "Waiting for Approval",
           data: null,
         };
       } else if (user.status === "approved") {
         return {
           status_info: false,
           status_code: 401,
-          message: "AYour Report is Approved",
+          message: "Your Report is Approved",
           data: null,
         };
       }
