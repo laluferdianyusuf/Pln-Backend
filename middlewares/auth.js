@@ -26,7 +26,7 @@ const authenticate = async (req, res, next) => {
   } catch (err) {
     return res.status(401).send({
       status_info: false,
-      message: "yPlease login again",
+      message: "Please login again",
       data: null,
     });
   }

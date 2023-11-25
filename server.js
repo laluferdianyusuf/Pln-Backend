@@ -111,9 +111,16 @@ const middleware = require("./middlewares/auth");
 
 // end point
 // user
-app.post("/v1/api/users/register", userController.register);
+app.post(
+  "/v1/api/users/register",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.register
+);
 app.post(
   "/v1/api/users/register/supervisor",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
   userController.registerSupervisor
 );
 app.post("/v1/api/users/login", userController.login);
