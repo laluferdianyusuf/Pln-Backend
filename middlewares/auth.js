@@ -40,9 +40,22 @@ const isSuperAdmin = async (req, res, next) => {
   }
   return res.status(401).json({
     status_info: false,
-    message: "You don't have permission to access this feature",
+    message: "You don't have permission (SUPERVISOR) ",
     data: null,
   });
 };
 
-module.exports = { authenticate, isSuperAdmin };
+const isEmployee = async (req, res, next) => {
+  const user = req.users;
+
+  if (user && user.role === ROLES.EMPLOYEE) {
+    return next();
+  }
+  return res.status(401).json({
+    status_info: false,
+    message: "You don't have permission (EMPLOYEE) ",
+    data: null,
+  });
+};
+
+module.exports = { authenticate, isSuperAdmin, isEmployee };

@@ -135,6 +135,7 @@ app.get("/v1/api/users/recapt/:division", userController.getRecaptUserDivision);
 app.put(
   "/v1/api/update/:id",
   middleware.authenticate,
+  middleware.isSuperAdmin,
   userController.updateUserBySupervisor
 );
 app.get("/v1/api/find/:reportType", userController.getUserByReportType);
@@ -151,6 +152,7 @@ app.get(
 app.post(
   "/v2/api/create-report",
   middleware.authenticate,
+  middleware.isEmployee,
   upload.single("image"),
   reportController.createReport
 );
