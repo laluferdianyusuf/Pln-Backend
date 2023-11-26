@@ -78,10 +78,6 @@ class UserRepository {
     const user = await prisma.user.findMany();
     return user;
   }
-  static async getRecapUsers() {
-    const user = await prisma.dailyRecapt.findMany();
-    return user;
-  }
 
   static async saveToNewDb(data) {
     try {
@@ -97,7 +93,6 @@ class UserRepository {
           address: data.address,
           role: data.role,
           status: data.status,
-          userId: data.id,
         },
       });
       return user;
@@ -162,19 +157,6 @@ class UserRepository {
   static async updateUserStatus(userId, newStatus) {
     try {
       const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { status: newStatus },
-      });
-      return updatedUser;
-    } catch (error) {
-      console.error("Error updating user status: ", error);
-      throw error;
-    }
-  }
-
-  static async updateUserRecapStatus(userId, newStatus) {
-    try {
-      const updatedUser = await prisma.dailyRecapt.update({
         where: { id: userId },
         data: { status: newStatus },
       });

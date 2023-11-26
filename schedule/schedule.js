@@ -6,25 +6,28 @@ const reportRepository = require("../repositories/reportRepository");
 const dayCron = async () => {
   try {
     const users = await userRepository.getUsers();
-    const userRecap = await userRepository.getRecapUsers();
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
-      const saveToDb = await userRepository.updateUserRecapStatus(
-        user.id,
-        user.status
-      );
+      const saveToDb = await userRepository.saveToNewDb({
+        id: user.id,
+        name: user.name,
+        nip: user.nip,
+        division: user.division,
+        email: user.email,
+        password: user.password,
+        phone_number: user.phone_number,
+        address: user.address,
+        role: user.role,
+        status: user.status,
+      });
       if (saveToDb) {
         await userRepository.updateUserStatus(user.id, "alpha");
       }
     }
 
     for (const report of reports) {
-      await reportRepository.updateReportType(
-        report.id,
-        "MINGGUAN",
-        userRecap.id
-      );
+      await reportRepository.updateReportType(report.id, "MINGGUAN");
     }
   } catch (error) {
     throw error;
