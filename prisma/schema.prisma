@@ -38,18 +38,19 @@ model Report {
 }
 
 model DailyRecapt {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   name         String
   nip          String
   division     String
-  email        String   @unique
+  email        String    @unique
   password     String
   phone_number String
   address      String
   role         String
   status       String
-  User         User?    @relation(fields: [userId], references: [id])
+  User         User?     @relation(fields: [userId], references: [id])
   userId       Int?
+  createdAt    DateTime?
   report       Report[]
 }
 

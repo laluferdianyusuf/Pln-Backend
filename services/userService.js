@@ -85,6 +85,7 @@ class UserService {
             role: createdUser.role,
             status: createdUser.status,
             userId: createdUser.id,
+            createdAt: new Date("Asia/Makassar"),
           });
         }
 
@@ -406,12 +407,11 @@ class UserService {
       });
 
       if (users) {
-        const getAllUsers = await userRepository.getUsersRecap();
         return {
           status_info: true,
           status_code: 200,
           message: "Success",
-          data: { users, getAllUsers },
+          data: users,
         };
       } else {
         return {
