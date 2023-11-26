@@ -214,7 +214,7 @@ class UserRepository {
     try {
       console.log(day);
       console.log(division);
-      const users = await prisma.dailyRecapt.findMany({
+      const users = await prisma.user.findMany({
         where: {
           report: {
             some: {
