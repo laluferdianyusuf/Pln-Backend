@@ -188,17 +188,19 @@ class UserRepository {
 
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
-      const formattedDate = prisma.fn.date(reportCreatedAt, "DD Month YYYY");
+      const isoCreatedAt = convertToISODate(reportCreatedAt);
+      console.log(isoCreatedAt);
       const users = await prisma.dailyRecapt.findMany({
         where: {
           report: {
             some: {
-              createdAt: { equals: formattedDate },
+              createdAt: { contains: isoCreatedAt },
             },
           },
           division: division,
         },
       });
+      console.log(users);
 
       return users;
     } catch (error) {
@@ -209,16 +211,18 @@ class UserRepository {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
+      console.log(day);
       const users = await prisma.dailyRecapt.findMany({
         where: {
           report: {
             some: {
-              createdAt: { contains: prisma.fn.date(day) },
+              createdAt: { contains: day },
             },
           },
           division: division,
         },
       });
+      console.log(users);
 
       return users;
     } catch (error) {
