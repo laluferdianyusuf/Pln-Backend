@@ -188,7 +188,7 @@ class UserRepository {
 
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
-      const formattedDate = prisma.fn.to_date(reportCreatedAt, "DD Month YYYY");
+      const formattedDate = prisma.fn.date(reportCreatedAt, "DD Month YYYY");
       const users = await prisma.dailyRecapt.findMany({
         where: {
           report: {
