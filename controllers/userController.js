@@ -4,6 +4,8 @@ const register = async (req, res) => {
   const { name, nip, division, email, password, phone_number, address, role } =
     req.body;
 
+  const user = req.users.id;
+
   const { status_info, status_code, message, data } =
     await userService.register({
       name,
@@ -14,6 +16,7 @@ const register = async (req, res) => {
       phone_number,
       address,
       role,
+      userId: user,
     });
 
   res.status(status_code).send({

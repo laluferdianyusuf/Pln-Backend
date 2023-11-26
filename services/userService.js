@@ -14,6 +14,7 @@ class UserService {
     phone_number,
     address,
     role,
+    userId,
   }) {
     try {
       if (
@@ -83,7 +84,7 @@ class UserService {
             address: createdUser.address,
             role: createdUser.role,
             status: createdUser.status,
-            userId: users.id,
+            userId,
           });
         }
 
