@@ -85,7 +85,6 @@ class UserService {
             role: createdUser.role,
             status: createdUser.status,
             userId: createdUser.id,
-            createdAt: new Date("Asia/Makassar"),
           });
         }
 
