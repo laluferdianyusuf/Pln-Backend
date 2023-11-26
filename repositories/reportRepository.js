@@ -8,7 +8,6 @@ class ReportRepository {
     createdById,
     createdAt,
     image,
-    dailyRecaptId,
   }) {
     const report = await prisma.report.create({
       data: {
@@ -17,7 +16,6 @@ class ReportRepository {
         createdById,
         createdAt,
         image,
-        dailyRecaptId,
       },
     });
     return report;
@@ -52,7 +50,7 @@ class ReportRepository {
     }
   }
 
-  static async updateReportType(reportId, newType) {
+  static async updateReportType(reportId, newType, newReportId) {
     try {
       const updatedReport = await prisma.report.update({
         where: {
@@ -60,6 +58,7 @@ class ReportRepository {
         },
         data: {
           type: newType,
+          dailyRecaptId: newReportId,
         },
       });
       return updatedReport;

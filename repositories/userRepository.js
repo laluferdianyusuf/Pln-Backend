@@ -78,6 +78,10 @@ class UserRepository {
     const user = await prisma.user.findMany();
     return user;
   }
+  static async getRecapUsers() {
+    const user = await prisma.dailyRecapt.findMany();
+    return user;
+  }
 
   static async saveToNewDb(data) {
     try {

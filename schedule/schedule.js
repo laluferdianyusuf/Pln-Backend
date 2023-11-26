@@ -6,6 +6,7 @@ const reportRepository = require("../repositories/reportRepository");
 const dayCron = async () => {
   try {
     const users = await userRepository.getUsers();
+    const userRecap = await userRepository.getRecapUsers();
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
@@ -19,7 +20,11 @@ const dayCron = async () => {
     }
 
     for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "MINGGUAN");
+      await reportRepository.updateReportType(
+        report.id,
+        "MINGGUAN",
+        userRecap.id
+      );
     }
   } catch (error) {
     throw error;
