@@ -9,22 +9,13 @@ const dayCron = async () => {
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
-      const saveToDb = await userRepository.saveToNewDb({
-        id: user.id,
-        name: user.name,
-        nip: user.nip,
-        division: user.division,
-        email: user.email,
-        password: user.password,
-        phone_number: user.phone_number,
-        address: user.address,
-        role: user.role,
-        status: user.status,
-        userId: user.id,
-      });
+      const saveToDb = await userRepository.updateUserRecapStatus(
+        user.id,
+        user.status
+      );
       if (saveToDb) {
+        await userRepository.updateUserStatus(user.id, "alpha");
       }
-      await userRepository.updateUserStatus(user.id, "alpha");
     }
 
     for (const report of reports) {

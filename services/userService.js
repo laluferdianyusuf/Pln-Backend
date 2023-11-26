@@ -83,7 +83,7 @@ class UserService {
             address: createdUser.address,
             role: createdUser.role,
             status: createdUser.status,
-            userId: createdUser.id,
+            userId: users.id,
           });
         }
 
