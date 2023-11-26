@@ -45,6 +45,7 @@ class UserRepository {
     phone_number,
     address,
     role,
+    status,
   }) {
     const user = await prisma.dailyRecapt.create({
       data: {
@@ -56,6 +57,7 @@ class UserRepository {
         phone_number,
         address,
         role,
+        status,
       },
     });
     return user;

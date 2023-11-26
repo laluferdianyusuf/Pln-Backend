@@ -82,6 +82,7 @@ class UserService {
           phone_number,
           address,
           role,
+          status: "alpha",
         });
 
         return {
