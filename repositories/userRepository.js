@@ -216,7 +216,7 @@ class UserRepository {
       console.log(division);
       const users = await prisma.user.findMany({
         where: {
-          report: {
+          reports: {
             some: {
               createdAt: { contains: day },
             },
