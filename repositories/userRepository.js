@@ -154,11 +154,11 @@ class UserRepository {
     }
   }
 
-  static async updateUserStatus(userId, newStatus) {
+  static async updateUserStatus(userId, newStatus, newRecapId) {
     try {
       const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: { status: newStatus },
+        data: { status: newStatus, dailyRecaptId: newRecapId },
       });
       return updatedUser;
     } catch (error) {

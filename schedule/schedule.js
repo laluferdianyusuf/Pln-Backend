@@ -22,7 +22,7 @@ const dayCron = async () => {
         status: user.status,
       });
       if (saveToDb) {
-        await userRepository.updateUserStatus(user.id, "alpha");
+        await userRepository.updateUserStatus(user.id, "alpha", saveToDb.id);
       }
     }
 
