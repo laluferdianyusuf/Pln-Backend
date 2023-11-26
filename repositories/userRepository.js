@@ -79,6 +79,11 @@ class UserRepository {
     return user;
   }
 
+  static async getRecapUsers() {
+    const user = await prisma.dailyRecap.findMany();
+    return user;
+  }
+
   static async saveToNewDb(data) {
     try {
       const user = await prisma.dailyRecap.create({
@@ -94,12 +99,40 @@ class UserRepository {
           role: data.role,
           status: data.status,
           days: data.days,
+          recapType: data.recapType,
           userId: data.id,
         },
       });
       return user;
     } catch (error) {
-      throw error;
+      console.log("no Data to save");
+      // throw error;
+    }
+  }
+
+  static async saveToMonthlyDb(data) {
+    try {
+      const user = await prisma.monthlyRecap.create({
+        data: {
+          id: data.id,
+          name: data.name,
+          nip: data.nip,
+          division: data.division,
+          email: data.email,
+          password: data.password,
+          phone_number: data.phone_number,
+          address: data.address,
+          role: data.role,
+          status: data.status,
+          days: data.days,
+          recapType: data.recapType,
+          userId: data.id,
+        },
+      });
+      return user;
+    } catch (error) {
+      console.log("no data to save");
+      // throw error;
     }
   }
 
@@ -204,7 +237,7 @@ class UserRepository {
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
-      const users = await prisma.dailyRecap.findMany({
+      const users = await prisma.monthlyRecap.findMany({
         where: {
           division: division,
           days: { contains: isoCreatedAt },
@@ -237,6 +270,16 @@ class UserRepository {
   static async deleteUsers() {
     try {
       const deletedUser = await prisma.dailyRecap.deleteMany();
+      return deletedUser;
+    } catch (error) {
+      console.error(`Error deleting user:`, error);
+      throw error;
+    }
+  }
+
+  static async deleteMonthlyUsers() {
+    try {
+      const deletedUser = await prisma.monthlyRecap.deleteMany();
       return deletedUser;
     } catch (error) {
       console.error(`Error deleting user:`, error);

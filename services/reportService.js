@@ -50,24 +50,8 @@ class ReportService {
 
       const report = await reportRepository.createReport(reportData);
       if (report) {
-        const update = await userRepository.updateUserStatus(
-          user.id,
-          "waiting"
-        );
-        await userRepository.saveToNewDb({
-          id: user.id,
-          name: user.name,
-          nip: user.nip,
-          division: user.division,
-          email: user.email,
-          password: user.password,
-          phone_number: user.phone_number,
-          address: user.address,
-          role: user.role,
-          status: update.status,
-          days: report.createdAt,
-          userId: report.createdById,
-        });
+        await userRepository.updateUserStatus(user.id, "waiting");
+
         return {
           status_info: true,
           status_code: 201,

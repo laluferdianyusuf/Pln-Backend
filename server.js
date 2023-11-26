@@ -5,6 +5,11 @@ const bodyParser = require("body-parser");
 const upload = require("./utils/fileUpload");
 const userRepository = require("./repositories/userRepository");
 const reportRepository = require("./repositories/reportRepository");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const app = express();
 dotenv.config();
@@ -17,53 +22,100 @@ app.use(cors());
 // node cron
 const cron = require("node-cron");
 
-cron.schedule("0 0 * * *", async () => {
-  console.log("apakah");
+cron.schedule("* * * * *", async () => {
+  console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
     const reports = await reportRepository.getReportByType("HARIAN");
+    const nowDays = dayjs().tz("Asia/Makassar");
+
+    const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
 
     for (const user of users) {
-      console.log("updated");
-      await userRepository.updateUserStatus(user.id, "alpha");
+      const saveToDB = await userRepository.saveToNewDb({
+        id: user.id,
+        name: user.name,
+        nip: user.nip,
+        division: user.division,
+        email: user.email,
+        password: user.password,
+        phone_number: user.phone_number,
+        address: user.address,
+        role: user.role,
+        status: user.status,
+        days: createdAt,
+        recapType: "MINGGUAN",
+        userId: user.id,
+      });
+      if (saveToDB) {
+        await userRepository.updateUserStatus(user.id, "alpha");
+        console.log("updated");
+      } else {
+        console.log("no data to save");
+      }
     }
 
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "MINGGUAN");
     }
-    console.log("berhasil updated");
+    console.log("update successfully");
   } catch (error) {
+    console.log(error);
     throw error;
   }
 });
 
-cron.schedule("0 0 */7 * *", async () => {
+cron.schedule("59 23 * * 0", async () => {
+  console.log("weekly schedule");
   try {
+    const users = await userRepository.getRecapUsers();
     const reports = await reportRepository.getReportByType("MINGGUAN");
 
+    for (const user of users) {
+      const saveToDB = await userRepository.saveToMonthlyDb({
+        id: user.id,
+        name: user.name,
+        nip: user.nip,
+        division: user.division,
+        email: user.email,
+        password: user.password,
+        phone_number: user.phone_number,
+        address: user.address,
+        role: user.role,
+        status: user.status,
+        days: user.days,
+        recapType: "BULANAN",
+        userId: user.id,
+      });
+      if (saveToDB) {
+        await userRepository.deleteUsers();
+      } else {
+        console.log("no data to save");
+      }
+    }
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "BULANAN");
     }
+    console.log("updated");
   } catch (error) {
     throw error;
   }
 });
 
 cron.schedule("0 0 1 * *", async () => {
+  console.log("monthly schedule");
   try {
     const user = await userRepository.getUsersByReportType("BULANAN");
 
     for (const users of user) {
-      await userRepository.deleteUsers();
+      await userRepository.deleteMonthlyUsers();
       await reportRepository.deleteReport("BULANAN");
     }
 
     const uploadDirectory = "public/uploads";
 
-    // Get the current time
     const currentTime = new Date();
 
-    // Read the contents of the upload directory
     fs.readdir(uploadDirectory, (err, files) => {
       if (err) {
         console.error("Error reading directory:", err);
