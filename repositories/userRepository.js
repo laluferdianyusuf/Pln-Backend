@@ -190,6 +190,7 @@ class UserRepository {
     try {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
       console.log(isoCreatedAt);
+      console.log(division);
       const users = await prisma.dailyRecapt.findMany({
         where: {
           report: {
@@ -212,6 +213,7 @@ class UserRepository {
   static async getUsersByReportByDay({ day, division }) {
     try {
       console.log(day);
+      console.log(division);
       const users = await prisma.dailyRecapt.findMany({
         where: {
           report: {
