@@ -28,7 +28,7 @@ const dayCron = async () => {
     }
 
     for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "MINGGUAN");
+      await reportRepository.updateReportType(report.id, "MINGGUAN", users.id);
     }
   } catch (error) {
     throw error;
