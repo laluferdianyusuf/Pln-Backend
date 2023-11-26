@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const upload = require("./utils/fileUpload");
+const userRepository = require("./repositories/userRepository");
+const reportRepository = require("./repositories/reportRepository");
 
 const app = express();
 dotenv.config();
@@ -14,13 +16,87 @@ app.use(cors());
 
 // node cron
 const cron = require("node-cron");
-const cronJobs = require("./schedule/schedule");
 
-cron.schedule("*/5 * * * *", cronJobs.dayCron);
+cron.schedule("0 0 * * *", async () => {
+  console.log("apakah");
+  try {
+    const users = await userRepository.getUsers();
+    const recap = await userRepository.getUsersRecap();
+    const reports = await reportRepository.getReportByType("HARIAN");
 
-cron.schedule("0 0 */7 * *", cronJobs.weekCron);
+    for (const user of users) {
+      for (const recaps of recap) {
+        const updateStatus = await userRepository.updateUserRecapStatus(
+          recaps.id,
+          user.status
+        );
+        if (updateStatus) {
+          console.log("updated");
+          await userRepository.updateUserStatus(user.id, "alpha");
+        }
+      }
+    }
 
-cron.schedule("0 0 1 * *", cronJobs.monthCron);
+    for (const report of reports) {
+      await reportRepository.updateReportType(report.id, "MINGGUAN");
+    }
+    console.log("berhasil updated");
+  } catch (error) {
+    throw error;
+  }
+});
+
+cron.schedule("0 0 */7 * *", async () => {
+  try {
+    const reports = await reportRepository.getReportByType("MINGGUAN");
+
+    for (const report of reports) {
+      await reportRepository.updateReportType(report.id, "BULANAN");
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
+cron.schedule("0 0 1 * *", async () => {
+  try {
+    const user = await userRepository.getUsersByReportType("BULANAN");
+
+    for (const users of user) {
+      await userRepository.deleteUsers();
+      await reportRepository.deleteReport("BULANAN");
+    }
+
+    const uploadDirectory = "public/uploads";
+
+    // Get the current time
+    const currentTime = new Date();
+
+    // Read the contents of the upload directory
+    fs.readdir(uploadDirectory, (err, files) => {
+      if (err) {
+        console.error("Error reading directory:", err);
+        return;
+      }
+
+      files.forEach((file) => {
+        const filePath = path.join(uploadDirectory, file);
+        const fileStat = fs.statSync(filePath);
+
+        const fileAgeInMilliseconds = currentTime - fileStat.mtime;
+
+        const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+
+        if (fileAgeInMilliseconds > oneMonthInMilliseconds) {
+          fs.unlinkSync(filePath);
+          console.log(`Deleted: ${filePath}`);
+        }
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+});
 
 // controller
 const userController = require("./controllers/userController");
