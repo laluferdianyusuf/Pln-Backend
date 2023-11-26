@@ -23,7 +23,7 @@ CREATE TABLE `Report` (
     `createdById` INTEGER NOT NULL,
     `createdAt` VARCHAR(191) NOT NULL,
     `image` VARCHAR(191) NOT NULL,
-    `dailyRecaptId` INTEGER NULL,
+    `dailyRecaptId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -50,7 +50,7 @@ CREATE TABLE `DailyRecapt` (
 ALTER TABLE `Report` ADD CONSTRAINT `Report_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Report` ADD CONSTRAINT `Report_dailyRecaptId_fkey` FOREIGN KEY (`dailyRecaptId`) REFERENCES `DailyRecapt`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Report` ADD CONSTRAINT `Report_dailyRecaptId_fkey` FOREIGN KEY (`dailyRecaptId`) REFERENCES `DailyRecapt`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `DailyRecapt` ADD CONSTRAINT `DailyRecapt_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

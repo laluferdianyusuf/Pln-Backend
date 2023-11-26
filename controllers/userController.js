@@ -6,7 +6,6 @@ const register = async (req, res) => {
 
   const { status_info, status_code, message, data } =
     await userService.register({
-      id,
       name,
       nip,
       division,
