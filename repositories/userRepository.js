@@ -173,6 +173,19 @@ class UserRepository {
     }
   }
 
+  static async updateUserRecapStatus(userId, newStatus) {
+    try {
+      const updatedUser = await prisma.dailyRecapt.update({
+        where: { id: userId },
+        data: { status: newStatus },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user status: ", error);
+      throw error;
+    }
+  }
+
   static async getUsersByReportType({ reportType }) {
     try {
       const users = await prisma.user.findMany({
