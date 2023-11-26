@@ -48,9 +48,9 @@ class UserService {
 
       role = "employee";
 
-      const getUserEmail = await userRepository.getByEmail({ email });
+      const users = await userRepository.getByEmail({ email });
 
-      if (getUserEmail) {
+      if (users) {
         return {
           status_info: false,
           status_code: 400,
@@ -72,6 +72,21 @@ class UserService {
           address,
           role,
         });
+        if (createdUser) {
+          await userRepository.saveToNewDb({
+            id: createdUser.id,
+            name: createdUser.name,
+            nip: createdUser.nip,
+            division: createdUser.division,
+            email: createdUser.email,
+            password: createdUser.password,
+            phone_number: createdUser.phone_number,
+            address: createdUser.address,
+            role: createdUser.role,
+            status: createdUser.status,
+            userId: createdUser.id,
+          });
+        }
 
         return {
           status_info: true,
