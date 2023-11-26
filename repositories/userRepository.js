@@ -79,6 +79,11 @@ class UserRepository {
     return user;
   }
 
+  static async getUsersRecap() {
+    const user = await prisma.dailyRecapt.findMany();
+    return user;
+  }
+
   static async saveToNewDb(data) {
     try {
       const user = await prisma.dailyRecapt.create({
@@ -93,6 +98,7 @@ class UserRepository {
           address: data.address,
           role: data.role,
           status: data.status,
+          userId: data.id,
         },
       });
       return user;
