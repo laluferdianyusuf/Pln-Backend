@@ -22,7 +22,7 @@ app.use(cors());
 // node cron
 const cron = require("node-cron");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("59 23 * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
