@@ -73,18 +73,6 @@ class UserService {
           role,
         });
 
-        await userRepository.createUserDaily({
-          name,
-          nip,
-          division,
-          email,
-          password: hashedPassword,
-          phone_number,
-          address,
-          role,
-          status: "alpha",
-        });
-
         return {
           status_info: true,
           status_code: 201,

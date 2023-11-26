@@ -36,33 +36,6 @@ class UserRepository {
     return user;
   }
 
-  static async createUserDaily({
-    name,
-    nip,
-    division,
-    email,
-    password,
-    phone_number,
-    address,
-    role,
-    status,
-  }) {
-    const user = await prisma.dailyRecapt.create({
-      data: {
-        name,
-        nip,
-        division,
-        email,
-        password,
-        phone_number,
-        address,
-        role,
-        status,
-      },
-    });
-    return user;
-  }
-
   static async createSupervisor({
     name,
     nip,
@@ -106,9 +79,9 @@ class UserRepository {
     return user;
   }
 
-  static async updateNewDb(data) {
+  static async saveToNewDb(data) {
     try {
-      const user = await prisma.dailyRecapt.update({
+      const user = await prisma.dailyRecapt.create({
         data: {
           id: data.id,
           name: data.name,
@@ -216,19 +189,16 @@ class UserRepository {
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
-      console.log(isoCreatedAt);
-      console.log(division);
       const users = await prisma.dailyRecapt.findMany({
         where: {
+          division: division,
           report: {
             some: {
               createdAt: { contains: isoCreatedAt },
             },
           },
-          division: division,
         },
       });
-      console.log(users);
 
       return users;
     } catch (error) {
@@ -239,19 +209,16 @@ class UserRepository {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
-      console.log(day);
-      console.log(division);
       const users = await prisma.dailyRecapt.findMany({
         where: {
+          division: division,
           report: {
             some: {
               createdAt: { contains: day },
             },
           },
-          division: division,
         },
       });
-      console.log(users);
 
       return users;
     } catch (error) {

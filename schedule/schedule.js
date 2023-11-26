@@ -9,7 +9,7 @@ const dayCron = async () => {
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
-      const saveToDb = await userRepository.updateNewDb({
+      const saveToDb = await userRepository.saveToNewDb({
         id: user.id,
         name: user.name,
         nip: user.nip,
@@ -29,6 +29,8 @@ const dayCron = async () => {
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "MINGGUAN");
     }
+
+    console.log("successfully updated");
   } catch (error) {
     throw error;
   }
@@ -41,6 +43,7 @@ const weekCron = async () => {
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "BULANAN");
     }
+    console.log("successfully updated");
   } catch (error) {
     throw error;
   }
@@ -81,6 +84,7 @@ const monthCron = async () => {
         }
       });
     });
+    console.log("successfully updated");
   } catch (error) {
     throw error;
   }
