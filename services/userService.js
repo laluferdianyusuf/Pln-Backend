@@ -400,6 +400,7 @@ class UserService {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
+      const getAllUsers = await userRepository.getUsersRecap();
       const users = await userRepository.getUsersByReportByDay({
         day,
         division,
@@ -410,7 +411,7 @@ class UserService {
           status_info: true,
           status_code: 200,
           message: "Success",
-          data: users,
+          data: { users, getAllUsers },
         };
       } else {
         return {
