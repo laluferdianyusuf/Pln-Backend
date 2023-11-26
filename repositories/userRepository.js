@@ -191,12 +191,12 @@ class UserRepository {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
       const users = await prisma.dailyRecapt.findMany({
         where: {
-          division: division,
           report: {
             some: {
               createdAt: { contains: isoCreatedAt },
             },
           },
+          division: division,
         },
       });
 
@@ -211,12 +211,12 @@ class UserRepository {
     try {
       const users = await prisma.dailyRecapt.findMany({
         where: {
-          division: division,
           report: {
             some: {
               createdAt: { contains: day },
             },
           },
+          division: division,
         },
       });
 
