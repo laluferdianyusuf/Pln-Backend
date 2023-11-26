@@ -74,16 +74,16 @@ class UserService {
         });
         if (createdUser) {
           await userRepository.saveToNewDb({
-            name: users.name,
-            nip: users.nip,
-            division: users.division,
-            email: users.email,
-            password: users.password,
-            phone_number: users.phone_number,
-            address: users.address,
-            role: users.role,
-            status: users.status,
-            // userId: users.id,
+            name: createdUser.name,
+            nip: createdUser.nip,
+            division: createdUser.division,
+            email: createdUser.email,
+            password: createdUser.password,
+            phone_number: createdUser.phone_number,
+            address: createdUser.address,
+            role: createdUser.role,
+            status: createdUser.status,
+            userId: createdUser.id,
           });
         }
 
