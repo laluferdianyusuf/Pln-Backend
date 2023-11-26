@@ -3,8 +3,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const upload = require("./utils/fileUpload");
-const path = require("path");
-const fs = require("fs");
 
 const app = express();
 dotenv.config();
@@ -16,91 +14,13 @@ app.use(cors());
 
 // node cron
 const cron = require("node-cron");
-const userRepository = require("./repositories/userRepository");
-const reportRepository = require("./repositories/reportRepository");
+const cronJobs = require("./schedule/schedule");
 
-cron.schedule("0 0 * * *", async () => {
-  try {
-    const users = await userRepository.getUsers();
-    const reports = await reportRepository.getReportByType("HARIAN");
+cron.schedule("0 0 * * *", cronJobs.dayCron);
 
-    for (const user of users) {
-      const saveToDb = await userRepository.saveToNewDb({
-        id: user.id,
-        name: user.name,
-        nip: user.nip,
-        division: user.division,
-        email: user.email,
-        password: user.password,
-        phone_number: user.phone_number,
-        address: user.address,
-        role: user.role,
-        status: user.status,
-      });
-      if (saveToDb) {
-        await userRepository.updateUserStatus(user.id, "alpha");
-      }
-    }
+cron.schedule("0 0 */7 * *", cronJobs.weekCron);
 
-    for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "MINGGUAN");
-    }
-  } catch (error) {
-    throw error;
-  }
-});
-
-cron.schedule("0 0 */7 * *", async () => {
-  try {
-    const reports = await reportRepository.getReportByType("MINGGUAN");
-
-    for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "BULANAN");
-    }
-  } catch (error) {
-    throw error;
-  }
-});
-
-cron.schedule("0 0 1 * *", async () => {
-  try {
-    const user = await userRepository.getUsersByReportType("BULANAN");
-
-    for (const users of user) {
-      await userRepository.deleteUsers();
-      await reportRepository.deleteReport("BULANAN");
-    }
-
-    const uploadDirectory = "public/uploads";
-
-    // Get the current time
-    const currentTime = new Date();
-
-    // Read the contents of the upload directory
-    fs.readdir(uploadDirectory, (err, files) => {
-      if (err) {
-        console.error("Error reading directory:", err);
-        return;
-      }
-
-      files.forEach((file) => {
-        const filePath = path.join(uploadDirectory, file);
-        const fileStat = fs.statSync(filePath);
-
-        const fileAgeInMilliseconds = currentTime - fileStat.mtime;
-
-        const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
-
-        if (fileAgeInMilliseconds > oneMonthInMilliseconds) {
-          fs.unlinkSync(filePath);
-          console.log(`Deleted: ${filePath}`);
-        }
-      });
-    });
-  } catch (error) {
-    throw error;
-  }
-});
+cron.schedule("0 0 1 * *", cronJobs.monthCron);
 
 // controller
 const userController = require("./controllers/userController");
