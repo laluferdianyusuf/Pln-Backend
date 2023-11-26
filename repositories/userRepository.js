@@ -36,6 +36,31 @@ class UserRepository {
     return user;
   }
 
+  static async createUserDaily({
+    name,
+    nip,
+    division,
+    email,
+    password,
+    phone_number,
+    address,
+    role,
+  }) {
+    const user = await prisma.dailyRecapt.create({
+      data: {
+        name,
+        nip,
+        division,
+        email,
+        password,
+        phone_number,
+        address,
+        role,
+      },
+    });
+    return user;
+  }
+
   static async createSupervisor({
     name,
     nip,
@@ -79,9 +104,9 @@ class UserRepository {
     return user;
   }
 
-  static async saveToNewDb(data) {
+  static async updateNewDb(data) {
     try {
-      const user = await prisma.dailyRecapt.create({
+      const user = await prisma.dailyRecapt.update({
         data: {
           id: data.id,
           name: data.name,

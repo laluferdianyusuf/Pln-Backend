@@ -16,19 +16,6 @@ CREATE TABLE `User` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Report` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(191) NOT NULL,
-    `type` ENUM('HARIAN', 'MINGGUAN', 'BULANAN') NOT NULL,
-    `createdById` INTEGER NOT NULL,
-    `createdAt` VARCHAR(191) NOT NULL,
-    `image` VARCHAR(191) NOT NULL,
-    `dailyRecaptId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `DailyRecapt` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
@@ -42,6 +29,19 @@ CREATE TABLE `DailyRecapt` (
     `status` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `DailyRecapt_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Report` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `description` VARCHAR(191) NOT NULL,
+    `type` ENUM('HARIAN', 'MINGGUAN', 'BULANAN') NOT NULL,
+    `createdById` INTEGER NOT NULL,
+    `createdAt` VARCHAR(191) NOT NULL,
+    `image` VARCHAR(191) NOT NULL,
+    `dailyRecaptId` INTEGER NOT NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
