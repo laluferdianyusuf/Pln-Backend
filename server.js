@@ -19,7 +19,7 @@ const cron = require("node-cron");
 const userRepository = require("./repositories/userRepository");
 const reportRepository = require("./repositories/reportRepository");
 
-cron.schedule("*/5 * * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     const users = await userRepository.getUsers();
     const reports = await reportRepository.getReportByType("HARIAN");
