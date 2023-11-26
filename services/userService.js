@@ -73,7 +73,6 @@ class UserService {
           role,
         });
         await userRepository.saveToNewDb({
-          id: users.id,
           name: users.name,
           nip: users.nip,
           division: users.division,
