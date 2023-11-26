@@ -22,12 +22,12 @@ const dayCron = async () => {
         status: user.status,
       });
       if (saveToDb) {
-        await userRepository.updateUserStatus(user.id, "alpha", saveToDb.id);
+        await userRepository.updateUserStatus(user.id, "alpha");
       }
     }
 
     for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "MINGGUAN");
+      await reportRepository.updateReportType(report.id, "MINGGUAN", users.id);
     }
   } catch (error) {
     throw error;
