@@ -4,6 +4,7 @@ const createReport = async (req, res) => {
   try {
     const { description, type } = req.body;
     const user = req.users.id;
+    const recap = req.dailyRecapt.id;
 
     const image = `${req.protocol}://${req.get("host")}/uploads/${
       req.file.filename
@@ -15,6 +16,7 @@ const createReport = async (req, res) => {
         type,
         createdById: user,
         image,
+        dailyRecaptId: recap,
       });
 
     res
