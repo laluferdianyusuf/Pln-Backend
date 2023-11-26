@@ -93,6 +93,7 @@ class UserRepository {
           address: data.address,
           role: data.role,
           status: data.status,
+          userId: data.id,
         },
       });
       return user;
