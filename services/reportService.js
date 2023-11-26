@@ -38,6 +38,7 @@ class ReportService {
         createdById,
         createdAt: createdAt,
         image,
+        dailyRecaptId,
       };
 
       const report = await reportRepository.createReport(reportData);
