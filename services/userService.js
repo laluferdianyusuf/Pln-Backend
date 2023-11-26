@@ -400,13 +400,13 @@ class UserService {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
-      const getAllUsers = await userRepository.getUsersRecap();
       const users = await userRepository.getUsersByReportByDay({
         day,
         division,
       });
 
       if (users) {
+        const getAllUsers = await userRepository.getUsersRecap();
         return {
           status_info: true,
           status_code: 200,
