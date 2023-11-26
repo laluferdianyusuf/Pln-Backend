@@ -6,6 +6,7 @@ const SALT_ROUND = 10;
 
 class UserService {
   static async register({
+    id,
     name,
     nip,
     division,
@@ -64,6 +65,7 @@ class UserService {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
 
         const createdUser = await userRepository.createUser({
+          id,
           name,
           nip,
           division,
@@ -84,7 +86,7 @@ class UserService {
             address: createdUser.address,
             role: createdUser.role,
             status: createdUser.status,
-            userId,
+            userId: createdUser.id,
           });
         }
 

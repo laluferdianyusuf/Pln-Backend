@@ -12,6 +12,7 @@ function convertToISODate(dateString) {
 
 class UserRepository {
   static async createUser({
+    id,
     name,
     nip,
     division,
@@ -23,6 +24,7 @@ class UserRepository {
   }) {
     const user = await prisma.user.create({
       data: {
+        id,
         name,
         nip,
         division,
