@@ -23,13 +23,13 @@ CREATE TABLE `Report` (
     `createdById` INTEGER NOT NULL,
     `createdAt` VARCHAR(191) NOT NULL,
     `image` VARCHAR(191) NOT NULL,
-    `dailyRecaptId` INTEGER NULL,
+    `dailyRecapId` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `DailyRecapt` (
+CREATE TABLE `DailyRecap` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `nip` VARCHAR(191) NOT NULL,
@@ -40,9 +40,10 @@ CREATE TABLE `DailyRecapt` (
     `address` VARCHAR(191) NOT NULL,
     `role` VARCHAR(191) NOT NULL,
     `status` VARCHAR(191) NOT NULL,
+    `days` VARCHAR(191) NOT NULL,
     `userId` INTEGER NULL,
 
-    UNIQUE INDEX `DailyRecapt_email_key`(`email`),
+    UNIQUE INDEX `DailyRecap_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -50,7 +51,7 @@ CREATE TABLE `DailyRecapt` (
 ALTER TABLE `Report` ADD CONSTRAINT `Report_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Report` ADD CONSTRAINT `Report_dailyRecaptId_fkey` FOREIGN KEY (`dailyRecaptId`) REFERENCES `DailyRecapt`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Report` ADD CONSTRAINT `Report_dailyRecapId_fkey` FOREIGN KEY (`dailyRecapId`) REFERENCES `DailyRecap`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `DailyRecapt` ADD CONSTRAINT `DailyRecapt_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `DailyRecap` ADD CONSTRAINT `DailyRecap_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

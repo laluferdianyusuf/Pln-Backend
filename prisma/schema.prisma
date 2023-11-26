@@ -7,37 +7,37 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:5hBg4g5HFHf3BBceAAgD-6ac1-4gBdE4@viaduct.proxy.rlwy.net:15525/railway"
+  url      = "mysql://root:5hBg4g5HFHf3BBceAAgD-6ac1-4gBdE4@mysql.railway.internal:3306/railway"
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
   nip          String
   division     String
-  email        String        @unique
+  email        String       @unique
   password     String
   phone_number String
   address      String
-  role         String        @default("employee")
-  status       String        @default("alpha")
+  role         String       @default("employee")
+  status       String       @default("alpha")
   reports      Report[]
-  daily        DailyRecapt[]
+  recap        DailyRecap[]
 }
 
 model Report {
-  id            Int          @id @default(autoincrement())
-  description   String
-  type          ReportType
-  createdBy     User         @relation(fields: [createdById], references: [id])
-  createdById   Int
-  createdAt     String
-  image         String
-  DailyRecapt   DailyRecapt? @relation(fields: [dailyRecaptId], references: [id])
-  dailyRecaptId Int?
+  id           Int         @id @default(autoincrement())
+  description  String
+  type         ReportType
+  createdBy    User        @relation(fields: [createdById], references: [id])
+  createdById  Int
+  createdAt    String
+  image        String
+  DailyRecap   DailyRecap? @relation(fields: [dailyRecapId], references: [id])
+  dailyRecapId Int?
 }
 
-model DailyRecapt {
+model DailyRecap {
   id           Int      @id @default(autoincrement())
   name         String
   nip          String
@@ -48,6 +48,7 @@ model DailyRecapt {
   address      String
   role         String
   status       String
+  days         String
   User         User?    @relation(fields: [userId], references: [id])
   userId       Int?
   report       Report[]

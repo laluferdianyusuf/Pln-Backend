@@ -15,7 +15,7 @@ const createReport = async (req, res) => {
         type,
         createdById: user,
         image,
-        dailyRecaptId: user,
+        dailyRecapId: user,
       });
 
     res

@@ -21,20 +21,11 @@ cron.schedule("0 0 * * *", async () => {
   console.log("apakah");
   try {
     const users = await userRepository.getUsers();
-    const recap = await userRepository.getUsersRecap();
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
-      for (const recaps of recap) {
-        const updateStatus = await userRepository.updateUserRecapStatus(
-          recaps.id,
-          user.status
-        );
-        if (updateStatus) {
-          console.log("updated");
-          await userRepository.updateUserStatus(user.id, "alpha");
-        }
-      }
+      console.log("updated");
+      await userRepository.updateUserStatus(user.id, "alpha");
     }
 
     for (const report of reports) {
@@ -127,7 +118,7 @@ app.get(
 );
 app.get("/v1/api/users/:division", userController.getUserDivision);
 app.get("/v1/api/users/by/:id", userController.getUserById);
-app.get("/v1/api/users/recapt/:division", userController.getRecaptUserDivision);
+app.get("/v1/api/users/recap/:division", userController.getRecapUserDivision);
 app.put(
   "/v1/api/update/:id",
   middleware.authenticate,

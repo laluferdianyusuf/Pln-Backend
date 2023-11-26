@@ -79,14 +79,9 @@ class UserRepository {
     return user;
   }
 
-  static async getUsersRecap() {
-    const user = await prisma.dailyRecapt.findMany();
-    return user;
-  }
-
   static async saveToNewDb(data) {
     try {
-      const user = await prisma.dailyRecapt.create({
+      const user = await prisma.dailyRecap.create({
         data: {
           id: data.id,
           name: data.name,
@@ -98,6 +93,7 @@ class UserRepository {
           address: data.address,
           role: data.role,
           status: data.status,
+          days: data.days,
           userId: data.id,
         },
       });
@@ -120,9 +116,9 @@ class UserRepository {
     }
   }
 
-  static async getRecaptByDivision({ division }) {
+  static async getRecapByDivision({ division }) {
     try {
-      const user = await prisma.dailyRecapt.findMany({
+      const user = await prisma.dailyRecap.findMany({
         where: { division: division },
       });
       return user;
@@ -175,7 +171,7 @@ class UserRepository {
 
   static async updateUserRecapStatus(userId, newStatus) {
     try {
-      const updatedUser = await prisma.dailyRecapt.update({
+      const updatedUser = await prisma.dailyRecap.update({
         where: { id: userId },
         data: { status: newStatus },
       });
@@ -208,14 +204,10 @@ class UserRepository {
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
-      const users = await prisma.dailyRecapt.findMany({
+      const users = await prisma.dailyRecap.findMany({
         where: {
           division: division,
-          report: {
-            some: {
-              createdAt: { contains: isoCreatedAt },
-            },
-          },
+          days: { contains: isoCreatedAt },
         },
       });
 
@@ -228,14 +220,10 @@ class UserRepository {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
-      const users = await prisma.dailyRecapt.findMany({
+      const users = await prisma.dailyRecap.findMany({
         where: {
           division: division,
-          report: {
-            some: {
-              createdAt: { contains: day },
-            },
-          },
+          days: { contains: day },
         },
       });
 
@@ -248,7 +236,7 @@ class UserRepository {
 
   static async deleteUsers() {
     try {
-      const deletedUser = await prisma.dailyRecapt.deleteMany();
+      const deletedUser = await prisma.dailyRecap.deleteMany();
       return deletedUser;
     } catch (error) {
       console.error(`Error deleting user:`, error);

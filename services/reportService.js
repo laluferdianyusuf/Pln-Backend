@@ -13,7 +13,7 @@ class ReportService {
     type,
     createdById,
     image,
-    dailyRecaptId,
+    dailyRecapId,
   }) {
     try {
       const user = await userRepository.getById({ id });
@@ -45,12 +45,29 @@ class ReportService {
         createdById,
         createdAt: createdAt,
         image,
-        dailyRecaptId,
+        dailyRecapId: user.id,
       };
 
       const report = await reportRepository.createReport(reportData);
       if (report) {
-        await userRepository.updateUserStatus(user.id, "waiting");
+        const update = await userRepository.updateUserStatus(
+          user.id,
+          "waiting"
+        );
+        await userRepository.saveToNewDb({
+          id: user.id,
+          name: user.name,
+          nip: user.nip,
+          division: user.division,
+          email: user.email,
+          password: user.password,
+          phone_number: user.phone_number,
+          address: user.address,
+          role: user.role,
+          status: update.status,
+          days: report.createdAt,
+          userId: report.createdById,
+        });
         return {
           status_info: true,
           status_code: 201,

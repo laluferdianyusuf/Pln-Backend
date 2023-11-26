@@ -105,11 +105,11 @@ const getUserById = async (req, res, next) => {
     .send({ status_info: status_info, message: message, data: data });
 };
 
-const getRecaptUserDivision = async (req, res, next) => {
+const getRecapUserDivision = async (req, res, next) => {
   const { division } = req.params;
 
   const { status_info, status_code, message, data } =
-    await userService.getRecaptUserDivision({ division: division });
+    await userService.getRecapUserDivision({ division: division });
 
   res
     .status(status_code)
@@ -186,7 +186,7 @@ module.exports = {
   getUserById,
   updateUserBySupervisor,
   getUserByReportType,
-  getRecaptUserDivision,
+  getRecapUserDivision,
   getUsersByReportCreatedAt,
   getUsersByReportByDay,
 };

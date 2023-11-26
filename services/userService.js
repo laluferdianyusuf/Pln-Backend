@@ -72,21 +72,6 @@ class UserService {
           address,
           role,
         });
-        if (createdUser) {
-          await userRepository.saveToNewDb({
-            id: createdUser.id,
-            name: createdUser.name,
-            nip: createdUser.nip,
-            division: createdUser.division,
-            email: createdUser.email,
-            password: createdUser.password,
-            phone_number: createdUser.phone_number,
-            address: createdUser.address,
-            role: createdUser.role,
-            status: createdUser.status,
-            userId: createdUser.id,
-          });
-        }
 
         return {
           status_info: true,
@@ -298,8 +283,8 @@ class UserService {
     }
   }
 
-  static async getRecaptUserDivision({ division }) {
-    const user = await userRepository.getRecaptByDivision({ division });
+  static async getRecapUserDivision({ division }) {
+    const user = await userRepository.getRecapByDivision({ division });
 
     if (user) {
       return {
@@ -319,6 +304,7 @@ class UserService {
           user.id,
           "approved"
         );
+        await userRepository.updateUserRecapStatus(user.id, "approved");
 
         return {
           status_info: true,
