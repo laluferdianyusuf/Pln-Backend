@@ -17,7 +17,7 @@ app.use(cors());
 // node cron
 const cron = require("node-cron");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   console.log("apakah");
   try {
     const users = await userRepository.getUsers();
@@ -25,22 +25,15 @@ cron.schedule("* * * * *", async () => {
     const reports = await reportRepository.getReportByType("HARIAN");
 
     for (const user of users) {
-      const updateStatus = await userRepository.saveToNewDb({
-        id: user.id,
-        name: user.name,
-        nip: user.nip,
-        division: user.division,
-        email: user.email,
-        password: user.password,
-        phone_number: user.phone_number,
-        address: user.address,
-        role: user.role,
-        status: user.status,
-        userId: user.id,
-      });
-      if (updateStatus) {
-        console.log("updated");
-        await userRepository.updateUserStatus(user.id, "alpha");
+      for (const recaps of recap) {
+        const updateStatus = await userRepository.updateUserRecapStatus(
+          recaps.id,
+          user.status
+        );
+        if (updateStatus) {
+          console.log("updated");
+          await userRepository.updateUserStatus(user.id, "alpha");
+        }
       }
     }
 
