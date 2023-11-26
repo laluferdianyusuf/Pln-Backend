@@ -29,8 +29,6 @@ const dayCron = async () => {
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "MINGGUAN");
     }
-
-    console.log("successfully updated");
   } catch (error) {
     throw error;
   }
@@ -43,7 +41,6 @@ const weekCron = async () => {
     for (const report of reports) {
       await reportRepository.updateReportType(report.id, "BULANAN");
     }
-    console.log("successfully updated");
   } catch (error) {
     throw error;
   }
@@ -84,7 +81,6 @@ const monthCron = async () => {
         }
       });
     });
-    console.log("successfully updated");
   } catch (error) {
     throw error;
   }

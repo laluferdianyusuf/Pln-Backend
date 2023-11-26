@@ -16,7 +16,7 @@ app.use(cors());
 const cron = require("node-cron");
 const cronJobs = require("./schedule/schedule");
 
-cron.schedule("0 0 * * *", cronJobs.dayCron);
+cron.schedule("*/5 * * * *", cronJobs.dayCron);
 
 cron.schedule("0 0 */7 * *", cronJobs.weekCron);
 
