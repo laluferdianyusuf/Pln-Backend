@@ -22,7 +22,7 @@ app.use(cors());
 // node cron
 const cron = require("node-cron");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("59 23 * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
@@ -33,7 +33,6 @@ cron.schedule("* * * * *", async () => {
     const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
 
     for (const user of users) {
-      // Check if the user's role is not "Supervisor"
       if (user.division !== "supervisor") {
         const saveToDB = await userRepository.saveToNewDb({
           name: user.name,
@@ -53,7 +52,8 @@ cron.schedule("* * * * *", async () => {
         if (saveToDB) {
           const updatedStatus = await userRepository.updateUserStatus(
             user.id,
-            "alpha"
+            "alpha",
+            "Weekly"
           );
           if (updatedStatus) {
             for (const report of reports) {
@@ -83,7 +83,7 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
-cron.schedule("59 23 * * 0", async () => {
+cron.schedule("59 23 * * *", async () => {
   console.log("weekly schedule");
   try {
     const users = await userRepository.getRecapUsers();
@@ -153,6 +153,7 @@ cron.schedule("0 0 1 * *", async () => {
         }
       });
     });
+    console.log("successful");
   } catch (error) {
     throw error;
   }
