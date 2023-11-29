@@ -83,7 +83,7 @@ cron.schedule("59 23 * * *", async () => {
   }
 });
 
-cron.schedule("59 23 * * *", async () => {
+cron.schedule("59 23 * * 0", async () => {
   console.log("weekly schedule");
   try {
     const users = await userRepository.getRecapUsers();
