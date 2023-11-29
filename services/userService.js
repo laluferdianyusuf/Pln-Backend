@@ -35,6 +35,17 @@ class UserService {
         };
       }
 
+      if (name.length > 20) {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "Name can't be more than 20 characters",
+          data: {
+            user: null,
+          },
+        };
+      }
+
       if (password.length < 8) {
         return {
           status_info: false,
