@@ -22,7 +22,7 @@ app.use(cors());
 // node cron
 const cron = require("node-cron");
 
-cron.schedule("59 23 * * *", async () => {
+cron.schedule("* * * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
@@ -32,25 +32,32 @@ cron.schedule("59 23 * * *", async () => {
     const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
 
     for (const user of users) {
-      const saveToDB = await userRepository.saveToNewDb({
-        name: user.name,
-        nip: user.nip,
-        division: user.division,
-        email: user.email,
-        password: user.password,
-        phone_number: user.phone_number,
-        address: user.address,
-        role: user.role,
-        status: user.status,
-        days: createdAt,
-        recapType: "MINGGUAN",
-        userId: user.id,
-      });
-      if (saveToDB) {
-        await userRepository.updateUserStatus(user.id, "alpha");
-        console.log("updated");
+      // Check if the user's role is not "Supervisor"
+      if (user.role !== "Supervisor") {
+        const saveToDB = await userRepository.saveToNewDb({
+          id: user.id,
+          name: user.name,
+          nip: user.nip,
+          division: user.division,
+          email: user.email,
+          password: user.password,
+          phone_number: user.phone_number,
+          address: user.address,
+          role: user.role,
+          status: user.status,
+          days: createdAt,
+          recapType: "MINGGUAN",
+          userId: user.id,
+        });
+
+        if (saveToDB) {
+          await userRepository.updateUserStatus(user.id, "alpha");
+          console.log("updated");
+        } else {
+          console.log("no data to save");
+        }
       } else {
-        console.log("no data to save");
+        console.log("User is a Supervisor, skipping");
       }
     }
 

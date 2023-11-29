@@ -45,7 +45,7 @@ model DailyRecap {
   name         String
   nip          String
   division     String
-  email        String   @unique
+  email        String
   password     String
   phone_number String
   address      String
@@ -63,7 +63,7 @@ model MonthlyRecap {
   name         String
   nip          String
   division     String
-  email        String   @unique
+  email        String
   password     String
   phone_number String
   address      String

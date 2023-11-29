@@ -8,6 +8,8 @@ class ReportRepository {
     createdById,
     createdAt,
     image,
+    dailyRecapId,
+    monthlyRecapId,
   }) {
     const report = await prisma.report.create({
       data: {
@@ -16,6 +18,8 @@ class ReportRepository {
         createdById,
         createdAt,
         image,
+        dailyRecapId,
+        monthlyRecapId,
       },
     });
     return report;

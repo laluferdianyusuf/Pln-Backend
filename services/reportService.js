@@ -7,14 +7,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 class ReportService {
-  static async createReport({
-    id,
-    description,
-    type,
-    createdById,
-    image,
-    dailyRecapId,
-  }) {
+  static async createReport({ id, description, type, createdById, image }) {
     try {
       const user = await userRepository.getById({ id });
 
@@ -46,6 +39,7 @@ class ReportService {
         createdAt: createdAt,
         image,
         dailyRecapId: user.id,
+        monthlyRecapId: user.id,
       };
 
       const report = await reportRepository.createReport(reportData);

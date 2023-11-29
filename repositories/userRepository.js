@@ -105,7 +105,7 @@ class UserRepository {
       });
       return user;
     } catch (error) {
-      console.log("no Data to save");
+      console.log("no Data to save", error);
       // throw error;
     }
   }
@@ -114,7 +114,6 @@ class UserRepository {
     try {
       const user = await prisma.monthlyRecap.create({
         data: {
-          id: data.id,
           name: data.name,
           nip: data.nip,
           division: data.division,
