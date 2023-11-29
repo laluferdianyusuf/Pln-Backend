@@ -33,7 +33,6 @@ cron.schedule("59 23 * * *", async () => {
 
     for (const user of users) {
       const saveToDB = await userRepository.saveToNewDb({
-        id: user.id,
         name: user.name,
         nip: user.nip,
         division: user.division,
@@ -73,7 +72,6 @@ cron.schedule("59 23 * * 0", async () => {
 
     for (const user of users) {
       const saveToDB = await userRepository.saveToMonthlyDb({
-        id: user.id,
         name: user.name,
         nip: user.nip,
         division: user.division,
