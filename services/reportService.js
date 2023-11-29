@@ -15,7 +15,7 @@ class ReportService {
         return {
           status_info: false,
           status_code: 401,
-          message: "Waiting for Approval",
+          message: "You are reported today",
           data: null,
         };
       } else if (user.status === "approved") {
@@ -38,8 +38,6 @@ class ReportService {
         createdById,
         createdAt: createdAt,
         image,
-        dailyRecapId: user.id,
-        monthlyRecapId: user.id,
       };
 
       const report = await reportRepository.createReport(reportData);

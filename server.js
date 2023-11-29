@@ -26,6 +26,7 @@ cron.schedule("* * * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
+
     const reports = await reportRepository.getReportByType("HARIAN");
     const nowDays = dayjs().tz("Asia/Makassar");
 
@@ -33,9 +34,8 @@ cron.schedule("* * * * *", async () => {
 
     for (const user of users) {
       // Check if the user's role is not "Supervisor"
-      if (user.role !== "Supervisor") {
+      if (user.division !== "supervisor") {
         const saveToDB = await userRepository.saveToNewDb({
-          id: user.id,
           name: user.name,
           nip: user.nip,
           division: user.division,
@@ -51,7 +51,22 @@ cron.schedule("* * * * *", async () => {
         });
 
         if (saveToDB) {
-          await userRepository.updateUserStatus(user.id, "alpha");
+          const updatedStatus = await userRepository.updateUserStatus(
+            user.id,
+            "alpha"
+          );
+          if (updatedStatus) {
+            for (const report of reports) {
+              const dailyUsers = await userRepository.getRecapUsers();
+              const monthlyUsers = await userRepository.getMonthlyRecapUsers();
+              await reportRepository.updateReportType(
+                report.id,
+                "MINGGUAN",
+                dailyUsers.id,
+                monthlyUsers.id
+              );
+            }
+          }
           console.log("updated");
         } else {
           console.log("no data to save");
@@ -61,9 +76,6 @@ cron.schedule("* * * * *", async () => {
       }
     }
 
-    for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "MINGGUAN");
-    }
     console.log("update successfully");
   } catch (error) {
     console.log(error);

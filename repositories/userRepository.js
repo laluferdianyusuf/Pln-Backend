@@ -84,11 +84,15 @@ class UserRepository {
     return user;
   }
 
+  static async getMonthlyRecapUsers() {
+    const user = await prisma.monthlyRecap.findMany();
+    return user;
+  }
+
   static async saveToNewDb(data) {
     try {
       const user = await prisma.dailyRecap.create({
         data: {
-          id: data.id,
           name: data.name,
           nip: data.nip,
           division: data.division,
@@ -100,7 +104,7 @@ class UserRepository {
           status: data.status,
           days: data.days,
           recapType: data.recapType,
-          userId: data.id,
+          userId: data.userId,
         },
       });
       return user;

@@ -45,7 +45,6 @@ CREATE TABLE `DailyRecap` (
     `recapType` VARCHAR(191) NOT NULL,
     `userId` INTEGER NULL,
 
-    UNIQUE INDEX `DailyRecap_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -65,7 +64,6 @@ CREATE TABLE `MonthlyRecap` (
     `recapType` VARCHAR(191) NOT NULL,
     `userId` INTEGER NULL,
 
-    UNIQUE INDEX `MonthlyRecap_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
