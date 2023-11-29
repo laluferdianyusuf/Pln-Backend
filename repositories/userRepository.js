@@ -129,7 +129,7 @@ class UserRepository {
           status: data.status,
           days: data.days,
           recapType: data.recapType,
-          userId: data.id,
+          userId: data.userId,
         },
       });
       return user;
