@@ -29,7 +29,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "npx prisma generate",
+    "build": "npx prisma generate && node index.js",
     "postbuild": "npx prisma generate"
   },
   "devDependencies": {
