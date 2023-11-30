@@ -30,7 +30,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "npx prisma generate && node index.js",
-    "postbuild": "npx prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "devDependencies": {
     "prisma": "^5.4.2"
