@@ -18,7 +18,7 @@
     }
   ],
   "env": {
-    "DATABASE_URL": "mysql://u994435562_pln:kvrAn$J5@auth-db1151.hstgr.io:3306/u994435562_absensi",
+    "DATABASE_URL": "mysql://u693868997_tivocy:cVdUGkZZ6*@auth-db1151.hstgr.io:3306/u693868997_tivocy",
     "PORT": "1901"
   }
 }
