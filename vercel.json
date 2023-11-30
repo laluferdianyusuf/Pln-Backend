@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
@@ -11,5 +11,9 @@
       "src": "/(.*)",
       "dest": "/"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "mysql://u994435562_pln:kvrAn$J5@auth-db1151.hstgr.io:3306/u994435562_absensi",
+    "PORT": 1901
+  }
 }
