@@ -29,8 +29,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "prisma generate",
-    "postbuild": "prisma generate"
+    "build": "npx prisma generate",
+    "postbuild": "npx prisma generate"
   },
   "devDependencies": {
     "prisma": "^5.4.2"
