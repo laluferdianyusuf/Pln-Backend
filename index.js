@@ -82,7 +82,7 @@ const cloudinary = require("./utils/cloudinary");
 const userRepository = require("./repositories/userRepository");
 const reportRepository = require("./repositories/reportRepository");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("*/2 * * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
