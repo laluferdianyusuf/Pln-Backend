@@ -5,9 +5,7 @@ const createReport = async (req, res) => {
     const { description, type } = req.body;
     const user = req.users.id;
 
-    const image = `${req.protocol}://${req.get("host")}/uploads/${
-      req.file.filename
-    }`;
+    const image = req.file;
     const { status_info, status_code, message, data } =
       await reportService.createReport({
         id: user,

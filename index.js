@@ -3,11 +3,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const upload = require("./utils/fileUpload");
-const userRepository = require("./repositories/userRepository");
-const reportRepository = require("./repositories/reportRepository");
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -19,10 +18,71 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+// controller
+const userController = require("./controllers/userController");
+const reportController = require("./controllers/reportController");
+
+// middleware
+const middleware = require("./middlewares/auth");
+
+// end point
+// user
+app.post(
+  "/v1/api/users/register",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.register
+);
+app.post(
+  "/v1/api/users/register/supervisor",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.registerSupervisor
+);
+app.post("/v1/api/users/login", userController.login);
+app.get(
+  "/v1/api/users/me",
+  middleware.authenticate,
+  userController.currentUser
+);
+app.get("/v1/api/users/:division", userController.getUserDivision);
+app.get("/v1/api/users/by/:id", userController.getUserById);
+app.get("/v1/api/users/recap/:division", userController.getRecapUserDivision);
+app.put(
+  "/v1/api/update/:id",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.updateUserBySupervisor
+);
+app.get("/v1/api/find/:reportType", userController.getUserByReportType);
+app.get(
+  "/v1/api/created/:reportCreatedAt/division/:division",
+  userController.getUsersByReportCreatedAt
+);
+app.get(
+  "/v1/api/day/:day/division/:division",
+  userController.getUsersByReportByDay
+);
+
+// report
+app.post(
+  "/v2/api/create-report",
+  middleware.authenticate,
+  middleware.isEmployee,
+  upload.single("image"),
+  reportController.createReport
+);
+app.get("/v2/api/reports/:division", reportController.getReportByUserDivision);
+
+app.get("/v2/api/search/:createdById", reportController.getReportByCreatedById);
+
 // node cron
 const cron = require("node-cron");
+const cloudinary = require("./utils/cloudinary");
+const userRepository = require("./repositories/userRepository");
+const reportRepository = require("./repositories/reportRepository");
 
-cron.schedule("59 23 * * *", async () => {
+cron.schedule("* * * * *", async () => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
@@ -52,8 +112,7 @@ cron.schedule("59 23 * * *", async () => {
         if (saveToDB) {
           const updatedStatus = await userRepository.updateUserStatus(
             user.id,
-            "alpha",
-            "Weekly"
+            "alpha"
           );
           if (updatedStatus) {
             for (const report of reports) {
@@ -119,6 +178,8 @@ cron.schedule("59 23 * * 0", async () => {
   }
 });
 
+const oneMonthInSeconds = 30 * 24 * 60 * 60;
+
 cron.schedule("0 0 1 * *", async () => {
   console.log("monthly schedule");
   try {
@@ -129,93 +190,36 @@ cron.schedule("0 0 1 * *", async () => {
       await reportRepository.deleteReport("BULANAN");
     }
 
-    const uploadDirectory = "public/uploads";
-
-    const currentTime = new Date();
-
-    fs.readdir(uploadDirectory, (err, files) => {
-      if (err) {
-        console.error("Error reading directory:", err);
-        return;
-      }
-
-      files.forEach((file) => {
-        const filePath = path.join(uploadDirectory, file);
-        const fileStat = fs.statSync(filePath);
-
-        const fileAgeInMilliseconds = currentTime - fileStat.mtime;
-
-        const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
-
-        if (fileAgeInMilliseconds > oneMonthInMilliseconds) {
-          fs.unlinkSync(filePath);
-          console.log(`Deleted: ${filePath}`);
-        }
-      });
+    const cloudinaryResources = await cloudinary.api.resources({
+      type: "upload",
+      max_results: 1000,
+      context: true,
     });
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    for (const resource of cloudinaryResources.resources) {
+      const uploadTimestamp = Math.floor(
+        new Date(resource.created_at).getTime() / 1000
+      );
+      const ageInSeconds = currentTime - uploadTimestamp;
+
+      if (ageInSeconds > oneMonthInSeconds) {
+        const publicId = resource.public_id;
+
+        try {
+          const result = await cloudinary.uploader.destroy(publicId);
+          console.log(`Deleted from Cloudinary: ${publicId}`);
+        } catch (cloudinaryError) {
+          console.error("Error deleting from Cloudinary:", cloudinaryError);
+        }
+      }
+    }
     console.log("successful");
   } catch (error) {
+    console.log("error: " + error);
     throw error;
   }
 });
-
-// controller
-const userController = require("./controllers/userController");
-const reportController = require("./controllers/reportController");
-
-// middleware
-const middleware = require("./middlewares/auth");
-
-// end point
-// user
-app.post(
-  "/v1/api/users/register",
-  middleware.authenticate,
-  middleware.isSuperAdmin,
-  userController.register
-);
-app.post(
-  "/v1/api/users/register/supervisor",
-  middleware.authenticate,
-  middleware.isSuperAdmin,
-  userController.registerSupervisor
-);
-app.post("/v1/api/users/login", userController.login);
-app.get(
-  "/v1/api/users/me",
-  middleware.authenticate,
-  userController.currentUser
-);
-app.get("/v1/api/users/:division", userController.getUserDivision);
-app.get("/v1/api/users/by/:id", userController.getUserById);
-app.get("/v1/api/users/recap/:division", userController.getRecapUserDivision);
-app.put(
-  "/v1/api/update/:id",
-  middleware.authenticate,
-  middleware.isSuperAdmin,
-  userController.updateUserBySupervisor
-);
-app.get("/v1/api/find/:reportType", userController.getUserByReportType);
-app.get(
-  "/v1/api/created/:reportCreatedAt/division/:division",
-  userController.getUsersByReportCreatedAt
-);
-app.get(
-  "/v1/api/day/:day/division/:division",
-  userController.getUsersByReportByDay
-);
-
-// report
-app.post(
-  "/v2/api/create-report",
-  middleware.authenticate,
-  middleware.isEmployee,
-  upload.single("image"),
-  reportController.createReport
-);
-app.get("/v2/api/reports/:division", reportController.getReportByUserDivision);
-
-app.get("/v2/api/search/:createdById", reportController.getReportByCreatedById);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);

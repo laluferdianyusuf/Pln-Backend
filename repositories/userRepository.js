@@ -192,11 +192,11 @@ class UserRepository {
     }
   }
 
-  static async updateUserStatus(userId, newStatus, newUserType) {
+  static async updateUserStatus(userId, newStatus) {
     try {
       const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: { status: newStatus, userType: newUserType },
+        data: { status: newStatus },
       });
       return updatedUser;
     } catch (error) {

@@ -3,6 +3,7 @@ const userRepository = require("../repositories/userRepository.js");
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
+const cloudinary = require("../utils/cloudinary");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -32,12 +33,23 @@ class ReportService {
 
       const createdAt = nowWITA.format("dddd D MMMM YYYY HH:mm");
 
+      let pictures = "";
+
+      if (image) {
+        const fileBase64 = image.buffer.toString("base64");
+        const file = `data:${image.mimetype};base64,${fileBase64}`;
+        const cloudinaryPicture = await cloudinary.uploader.upload(file);
+        pictures = cloudinaryPicture.url;
+      } else {
+        pictures = getUsersById.picture;
+      }
+
       const reportData = {
         description,
         type,
         createdById,
         createdAt: createdAt,
-        image,
+        image: pictures,
       };
 
       const report = await reportRepository.createReport(reportData);
