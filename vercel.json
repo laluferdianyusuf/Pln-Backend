@@ -20,5 +20,19 @@
   "env": {
     "DATABASE_URL": "mysql://u693868997_tivocy:cVdUGkZZ6*@auth-db1151.hstgr.io:3306/u693868997_tivocy",
     "PORT": "1901"
-  }
+  },
+  "crons": [
+    {
+      "path": "/cron.dailyCron",
+      "schedule": "*/2 * * * *"
+    },
+    {
+      "path": "/cron.weeklyCron",
+      "schedule": "59 23 * * 0"
+    },
+    {
+      "path": "/cron.monthlyCron",
+      "schedule": "0 0 1 * *"
+    }
+  ]
 }
