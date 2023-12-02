@@ -83,6 +83,7 @@ const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/dailyCron");
 function scheduleMinutes() {
   schedule.scheduleJob("* * * * *", function () {
     console.log("Running every minute");
+    dailyCron();
   });
 }
 
