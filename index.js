@@ -83,7 +83,7 @@ app.get("/v1/api/keep-warm", (req, res) => {
 
 // schedule cron
 const schedule = require("node-schedule");
-const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/dailyCron");
+const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/cronJob");
 
 function scheduleMinutes() {
   schedule.scheduleJob("* * * * *", function () {

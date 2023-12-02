@@ -21,5 +21,11 @@
   "env": {
     "DATABASE_URL": "mysql://u693868997_tivocy:cVdUGkZZ6*@auth-db1151.hstgr.io:3306/u693868997_tivocy",
     "PORT": "1901"
+  },
+
+  "functions": {
+    "scheduled-function": {
+      "schedule": "0 * * * *"
+    }
   }
 }
