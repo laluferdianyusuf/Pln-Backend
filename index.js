@@ -83,10 +83,29 @@ app.get("/v1/api/keep-warm", (req, res) => {
 
 const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/cronJob");
 
-app.get("/api/schedule/minutes", dailyCron);
-app.get("/api/schedule/daily", dailyCron);
-app.get("/api/schedule/weekly", weeklyCron);
-app.get("/api/schedule/monthly", monthlyCron);
+// Endpoint untuk menjalankan tugas harian
+app.get("/api/schedule/daily", (req, res) => {
+  dailyCron();
+  res.status(200).send("Daily cron executed");
+});
+
+// Endpoint untuk menjalankan tugas mingguan
+app.get("/api/schedule/weekly", (req, res) => {
+  weeklyCron();
+  res.status(200).send("Weekly cron executed");
+});
+
+// Endpoint untuk menjalankan tugas bulanan
+app.get("/api/schedule/monthly", (req, res) => {
+  monthlyCron();
+  res.status(200).send("Monthly cron executed");
+});
+
+// Endpoint untuk menjalankan tugas setiap menit (opsional)
+app.get("/api/schedule/minutes", (req, res) => {
+  dailyCron(); // Ganti dengan fungsi sesuai kebutuhan
+  res.status(200).send("Cron executed every minute");
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);
