@@ -315,7 +315,6 @@ class UserService {
           user.id,
           "approved"
         );
-        await userRepository.updateUserRecapStatus(user.id, "approved");
 
         return {
           status_info: true,
