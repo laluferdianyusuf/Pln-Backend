@@ -1,6 +1,12 @@
-const cloudinary = require("./utils/cloudinary");
-const userRepository = require("./repositories/userRepository");
-const reportRepository = require("./repositories/reportRepository");
+const cloudinary = require("../utils/cloudinary");
+const userRepository = require("../repositories/userRepository");
+const reportRepository = require("../repositories/reportRepository");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const dailyCron = async (event, context) => {
   console.log("daily schedule");
