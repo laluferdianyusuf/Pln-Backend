@@ -76,6 +76,11 @@ app.get("/v2/api/reports/:division", reportController.getReportByUserDivision);
 
 app.get("/v2/api/search/:createdById", reportController.getReportByCreatedById);
 
+app.get("/v1/api/keep-warm", (req, res) => {
+  console.log("Keep warm request received at:", new Date());
+  res.status(200).send("Keeping warm!");
+});
+
 // schedule cron
 const schedule = require("node-schedule");
 const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/dailyCron");
