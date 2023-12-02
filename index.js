@@ -81,45 +81,12 @@ app.get("/v1/api/keep-warm", (req, res) => {
   res.status(200).send("Keeping warm!");
 });
 
-// schedule cron
-const schedule = require("node-schedule");
 const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/cronJob");
 
-function scheduleMinutes() {
-  schedule.scheduleJob("* * * * *", function () {
-    console.log("Running every minute");
-    dailyCron();
-  });
-}
-
-function scheduleDailyCron() {
-  schedule.scheduleJob("59 23 * * *", function () {
-    console.log("Running dailyCron at:", new Date());
-    dailyCron();
-  });
-}
-
-// Fungsi untuk menjalankan cron mingguan pada jam 23:59 setiap hari Minggu
-function scheduleWeeklyCron() {
-  schedule.scheduleJob("59 23 * * 0", function () {
-    console.log("Running weeklyCron at:", new Date());
-    weeklyCron();
-  });
-}
-
-// Fungsi untuk menjalankan cron bulanan pada jam 23:59 setiap tanggal 1 bulan
-function scheduleMonthlyCron() {
-  schedule.scheduleJob("59 23 1 * *", function () {
-    console.log("Running monthlyCron at:", new Date());
-    monthlyCron();
-  });
-}
-
-// Menjalankan fungsi untuk pertama kali
-scheduleMinutes();
-scheduleDailyCron();
-scheduleWeeklyCron();
-scheduleMonthlyCron();
+app.get("/api/schedule/minutes", dailyCron);
+app.get("/api/schedule/daily", dailyCron);
+app.get("/api/schedule/weekly", weeklyCron);
+app.get("/api/schedule/monthly", monthlyCron);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);
