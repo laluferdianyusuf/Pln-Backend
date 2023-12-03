@@ -218,6 +218,42 @@ class UserRepository {
     }
   }
 
+  static async deleteUserById(userId) {
+    try {
+      const updatedUser = await prisma.user.delete({
+        where: { id: userId },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user status: ", error);
+      throw error;
+    }
+  }
+
+  static async deleteUserDailyById(userId) {
+    try {
+      const updatedUser = await prisma.dailyRecap.deleteMany({
+        where: { userId: userId },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user status: ", error);
+      throw error;
+    }
+  }
+
+  static async deleteUserMonthlyById(userId) {
+    try {
+      const updatedUser = await prisma.monthlyRecap.deleteMany({
+        where: { userId: userId },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user status: ", error);
+      throw error;
+    }
+  }
+
   static async getUsersByReportType({ reportType }) {
     try {
       const users = await prisma.user.findMany({

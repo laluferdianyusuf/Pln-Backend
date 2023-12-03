@@ -40,6 +40,7 @@ app.post(
   userController.registerSupervisor
 );
 app.post("/v1/api/users/login", userController.login);
+app.get("/v1/api/users", userController.getAllUsers);
 app.get(
   "/v1/api/users/me",
   middleware.authenticate,
@@ -54,6 +55,7 @@ app.put(
   middleware.isSuperAdmin,
   userController.updateUserBySupervisor
 );
+app.delete("/v1/api/users/delete/:id", userController.deleteUserById);
 app.get("/v1/api/find/:reportType", userController.getUserByReportType);
 app.get(
   "/v1/api/created/:reportCreatedAt/division/:division",

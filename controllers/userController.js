@@ -83,6 +83,15 @@ const login = async (req, res) => {
   });
 };
 
+const getAllUsers = async (req, res) => {
+  const { status_info, status_code, message, data } =
+    await userService.getAllUsers();
+
+  res
+    .status(status_code)
+    .send({ status_info: status_info, message: message, data: data });
+};
+
 const getUserDivision = async (req, res, next) => {
   const { division } = req.params;
 
@@ -121,6 +130,17 @@ const updateUserBySupervisor = async (req, res, next) => {
 
   const { status_info, status_code, message, data } =
     await userService.updateUserStatusBySupervisor({ id: id });
+
+  res
+    .status(status_code)
+    .send({ status_info: status_info, message: message, data: data });
+};
+
+const deleteUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  const { status_info, status_code, message, data } =
+    await userService.deleteUserById({ id: id });
 
   res
     .status(status_code)
@@ -181,10 +201,12 @@ module.exports = {
   register,
   registerSupervisor,
   login,
+  getAllUsers,
   currentUser,
   getUserDivision,
   getUserById,
   updateUserBySupervisor,
+  deleteUserById,
   getUserByReportType,
   getRecapUserDivision,
   getUsersByReportCreatedAt,

@@ -261,6 +261,56 @@ class UserService {
     }
   }
 
+  static async getAllUsers() {
+    try {
+      const users = await userRepository.getUsers();
+
+      if (users) {
+        const filteredUsers = users.filter(
+          (user) => user.division !== "supervisor"
+        );
+
+        if (filteredUsers.length > 0) {
+          return {
+            status_info: true,
+            status_code: 200,
+            message: "Get All Users (excluding supervisors)",
+            data: {
+              users: filteredUsers,
+            },
+          };
+        } else {
+          return {
+            status_info: false,
+            status_code: 400,
+            message: "No Users Available (excluding supervisors)",
+            data: {
+              users: null,
+            },
+          };
+        }
+      } else {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "No Users Available",
+          data: {
+            users: null,
+          },
+        };
+      }
+    } catch (error) {
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Internal Server Error" + error,
+        data: {
+          users: null,
+        },
+      };
+    }
+  }
+
   static async getUserDivision({ division }) {
     const user = await userRepository.getByDivision({ division });
 
@@ -343,6 +393,44 @@ class UserService {
         status_code: 500,
         message: "Error: " + error.message,
         data: null,
+      };
+    }
+  }
+
+  static async deleteUserById({ id }) {
+    try {
+      const user = await userRepository.getById({ id });
+      if (!user) {
+        return {
+          status_info: false,
+          status_code: 404,
+          message: "User not found",
+          data: {
+            user: null,
+          },
+        };
+      } else {
+        await userRepository.deleteUserById(user.id);
+        await userRepository.deleteUserDailyById(user.id);
+        await userRepository.deleteMonthlyUsers(user.id);
+
+        return {
+          status_info: true,
+          status_code: 200,
+          message: "User deleted successfully",
+          data: {
+            user: user,
+          },
+        };
+      }
+    } catch (error) {
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Internal Server Error" + error,
+        data: {
+          user: null,
+        },
       };
     }
   }
