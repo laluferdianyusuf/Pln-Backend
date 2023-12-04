@@ -29,13 +29,13 @@ model User {
 
 model Report {
   id             Int           @id @default(autoincrement())
-  JTM            String?
-  JTR            String?
-  Gardu          String?
-  SRAPP          String?
-  TB9            String?
-  TB12           String?
-  TB13           String?
+  JTM            String?       @default("0")
+  JTR            String?       @default("0")
+  Gardu          String?       @default("0")
+  SRAPP          String?       @default("0")
+  TB9            String?       @default("0")
+  TB12           String?       @default("0")
+  TB13           String?       @default("0")
   description    String
   type           ReportType
   createdBy      User          @relation(fields: [createdById], references: [id])

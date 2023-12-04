@@ -35,6 +35,35 @@ class ReportRepository {
     return report;
   }
 
+  static async updateReport(
+    id,
+    JTM,
+    JTR,
+    Gardu,
+    SRAPP,
+    TB9,
+    TB12,
+    TB13,
+    description,
+    image
+  ) {
+    const updateReport = await prisma.report.update({
+      where: { id: id },
+      data: {
+        JTM: JTM,
+        JTR: JTR,
+        Gardu: Gardu,
+        SRAPP: SRAPP,
+        TB9: TB9,
+        TB12: TB12,
+        TB13: TB13,
+        description: description,
+        image: image,
+      },
+    });
+    return updateReport;
+  }
+
   static async getReportById(reportId) {
     return await prisma.report.findUnique({
       where: { id: reportId },
@@ -70,6 +99,21 @@ class ReportRepository {
     }
   }
 
+  static async getReportByCreatedAtAndId({ userId, createdAt }) {
+    try {
+      const reports = await prisma.report.findMany({
+        where: {
+          createdById: userId,
+          createdAt: { contains: createdAt },
+        },
+      });
+
+      return reports;
+    } catch (error) {
+      console.error("Error fetching report by report createdAt:", error);
+      throw error;
+    }
+  }
   static async getReportByCreatedAt({ createdAt }) {
     try {
       const reports = await prisma.report.findMany({
@@ -108,6 +152,18 @@ class ReportRepository {
       const deletedReport = await prisma.report.deleteMany({
         where: {
           type: type,
+        },
+      });
+      return deletedReport;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async deleteReportById(id) {
+    try {
+      const deletedReport = await prisma.report.delete({
+        where: {
+          id: id,
         },
       });
       return deletedReport;

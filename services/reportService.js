@@ -25,25 +25,10 @@ class ReportService {
     try {
       const user = await userRepository.getById({ id });
 
-      if (user.status === "waiting") {
-        return {
-          status_info: false,
-          status_code: 401,
-          message: "You are reported today",
-          data: null,
-        };
-      } else if (user.status === "approved") {
-        return {
-          status_info: false,
-          status_code: 401,
-          message: "Your Report is Approved",
-          data: null,
-        };
-      }
-
       const nowWITA = dayjs().tz("Asia/Makassar");
       type = "HARIAN";
 
+      const today = nowWITA.format("dddd D MMMM YYYY");
       const createdAt = nowWITA.format("dddd D MMMM YYYY HH:mm");
 
       let pictures = "";
@@ -55,6 +40,37 @@ class ReportService {
         pictures = cloudinaryPicture.url;
       } else {
         pictures = getUsersById.picture;
+      }
+
+      if (user.status === "waiting") {
+        const existingReport = await reportRepository.getReportByCreatedAtAndId(
+          {
+            createdById: user.id,
+            createdAt: today,
+          }
+        );
+
+        const startIndex = existingReport[0].image.lastIndexOf("/") + 1;
+        const endIndex = existingReport[0].image.lastIndexOf(".");
+        const imageToDelete = existingReport[0].image.substring(
+          startIndex,
+          endIndex
+        );
+
+        if (existingReport) {
+          const existingReportId = existingReport[0].id;
+          await cloudinary.uploader.destroy(imageToDelete);
+          await reportRepository.deleteReportById(existingReportId);
+        }
+      }
+
+      if (user.status === "approved") {
+        return {
+          status_info: false,
+          status_code: 401,
+          message: "Your Report has already been approved",
+          data: null,
+        };
       }
 
       const reportData = {
@@ -104,12 +120,73 @@ class ReportService {
   static async getAllReports() {
     try {
       const reports = await reportRepository.getAllReports();
-      if (reports) {
+      if (reports && reports.length > 0) {
+        // Extract unique dates from reports
+        const uniqueDates = Array.from(
+          new Set(reports.map((report) => report.createdAt))
+        );
+
+        // Calculate total JTR for each date
+        const result = uniqueDates.map((Tanggal) => {
+          const formattedDate = dayjs(Tanggal).format("D MMMM YYYY");
+          const reportsOnDate = reports.filter(
+            (report) => report.createdAt === Tanggal
+          );
+          const JTM = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.JTM),
+            0
+          );
+          const JTR = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.JTR),
+            0
+          );
+          const Gardu = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.Gardu),
+            0
+          );
+          const SRAPP = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.SRAPP),
+            0
+          );
+          const totalTB9 = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.TB9),
+            0
+          );
+          const totalTB12 = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.TB12),
+            0
+          );
+          const totalTB13 = reportsOnDate.reduce(
+            (acc, report) => acc + parseInt(report.TB13),
+            0
+          );
+          const firstDescription =
+            reportsOnDate.length > 0 ? reportsOnDate[0].description : null;
+          let No = 0;
+          No++;
+          return {
+            No,
+            Tanggal: formattedDate,
+            "Nama Pekerjaan": {
+              "JTM (Kms)": JTM,
+              "Gardu (Unit)": Gardu,
+              "JTR (Kms)": JTR,
+              "SR/APP (Pelanggan)": SRAPP,
+              "TIANG BETON": {
+                "9 Meter (BTG)": totalTB9,
+                "12 Meter (BTG)": totalTB12,
+                "13 Meter (BTG)": totalTB13,
+              },
+            },
+            DESCRIPTION: firstDescription,
+          };
+        });
+
         return {
           status_info: true,
           status_code: 200,
           message: "Success",
-          data: reports,
+          data: result,
         };
       } else {
         return {
