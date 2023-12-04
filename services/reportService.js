@@ -121,12 +121,10 @@ class ReportService {
     try {
       const reports = await reportRepository.getAllReports();
       if (reports && reports.length > 0) {
-        // Extract unique dates from reports
         const uniqueDates = Array.from(
           new Set(reports.map((report) => report.createdAt))
         );
 
-        // Calculate total JTR for each date
         const result = uniqueDates.map((Tanggal) => {
           const formattedDate = dayjs(Tanggal).format("D MMMM YYYY");
           const reportsOnDate = reports.filter(
