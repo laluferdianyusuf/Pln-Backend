@@ -29,6 +29,7 @@ model User {
 
 model Report {
   id             Int           @id @default(autoincrement())
+  kms            String
   description    String
   type           ReportType
   createdBy      User          @relation(fields: [createdById], references: [id])

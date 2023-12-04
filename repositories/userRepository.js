@@ -141,10 +141,15 @@ class UserRepository {
 
   static async getByDivision({ division }) {
     try {
-      const user = await prisma.user.findMany({
-        where: { division: division },
+      const users = await prisma.user.findMany({
+        where: {
+          division: {
+            in: division,
+          },
+        },
       });
-      return user;
+
+      return users;
     } catch (error) {
       throw new Error(`Failed to get user by division: ${error.message}`);
     } finally {
@@ -278,7 +283,7 @@ class UserRepository {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
       const users = await prisma.monthlyRecap.findMany({
         where: {
-          division: division,
+          division: { in: division },
           days: { contains: isoCreatedAt },
         },
       });
@@ -294,7 +299,7 @@ class UserRepository {
     try {
       const users = await prisma.dailyRecap.findMany({
         where: {
-          division: division,
+          division: { in: division },
           days: { contains: day },
         },
       });

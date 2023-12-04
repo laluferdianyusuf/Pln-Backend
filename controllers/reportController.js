@@ -2,13 +2,14 @@ const reportService = require("../services/reportService");
 
 const createReport = async (req, res) => {
   try {
-    const { description, type } = req.body;
+    const { kms, description, type } = req.body;
     const user = req.users.id;
 
     const image = req.file;
     const { status_info, status_code, message, data } =
       await reportService.createReport({
         id: user,
+        kms,
         description,
         type,
         createdById: user,

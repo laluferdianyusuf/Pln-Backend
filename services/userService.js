@@ -312,7 +312,11 @@ class UserService {
   }
 
   static async getUserDivision({ division }) {
-    const user = await userRepository.getByDivision({ division });
+    const divisionsArray = division.split("/").map((item) => item.trim());
+
+    const user = await userRepository.getByDivision({
+      division: divisionsArray,
+    });
 
     if (user) {
       return {
@@ -450,9 +454,10 @@ class UserService {
 
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
+      const divisionsArray = division.split("/").map((item) => item.trim());
       const users = await userRepository.getUsersByReportCreatedAt({
         reportCreatedAt,
-        division,
+        division: divisionsArray,
       });
 
       if (users) {
@@ -484,9 +489,10 @@ class UserService {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
+      const divisionsArray = division.split("/").map((item) => item.trim());
       const users = await userRepository.getUsersByReportByDay({
         day,
-        division,
+        division: divisionsArray,
       });
 
       if (users) {

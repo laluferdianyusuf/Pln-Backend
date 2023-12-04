@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 class ReportRepository {
   static async createReport({
+    kms,
     description,
     type,
     createdById,
@@ -11,6 +12,7 @@ class ReportRepository {
   }) {
     const report = await prisma.report.create({
       data: {
+        kms,
         description,
         type,
         createdById,
