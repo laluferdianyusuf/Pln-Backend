@@ -10,7 +10,13 @@ dayjs.extend(timezone);
 class ReportService {
   static async createReport({
     id,
-    kms,
+    JTM,
+    JTR,
+    Gardu,
+    SRAPP,
+    TB9,
+    TB12,
+    TB13,
     description,
     type,
     createdById,
@@ -52,7 +58,13 @@ class ReportService {
       }
 
       const reportData = {
-        kms,
+        JTM,
+        JTR,
+        Gardu,
+        SRAPP,
+        TB9,
+        TB12,
+        TB13,
         description,
         type,
         createdById,
@@ -89,6 +101,35 @@ class ReportService {
     }
   }
 
+  static async getAllReports() {
+    try {
+      const reports = await reportRepository.getAllReports();
+      if (reports) {
+        return {
+          status_info: true,
+          status_code: 200,
+          message: "Success",
+          data: reports,
+        };
+      } else {
+        return {
+          status_info: false,
+          status_code: 404,
+          message: "No Reports found",
+          data: null,
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Internal Server Error",
+        data: null,
+      };
+    }
+  }
+
   static async getReportByUserDivision({ division }) {
     const user = await userRepository.getByDivision({ division });
     const report = await reportRepository.getAllReportsByDivision();
@@ -99,6 +140,38 @@ class ReportService {
         status_code: 200,
         message: "Success",
         data: report,
+      };
+    }
+  }
+
+  static async getReportByCreatedAt({ createdAt }) {
+    try {
+      const reports = await reportRepository.getReportByCreatedAt({
+        createdAt,
+      });
+
+      if (reports) {
+        return {
+          status_info: true,
+          status_code: 200,
+          message: "Success",
+          data: reports,
+        };
+      } else {
+        return {
+          status_info: false,
+          status_code: 404,
+          message: "Not Found",
+          data: null,
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Internal Server Error",
+        data: null,
       };
     }
   }

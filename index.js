@@ -77,6 +77,11 @@ app.post(
 app.get("/v2/api/reports/:division", reportController.getReportByUserDivision);
 
 app.get("/v2/api/search/:createdById", reportController.getReportByCreatedById);
+app.get(
+  "/v2/api/reports/by/:createdAt",
+  reportController.getReportsByCreatedAt
+);
+app.get("/v2/api/reports", reportController.getAllReports);
 
 app.get("/v1/api/keep-warm", (req, res) => {
   console.log("Keep warm request received at:", new Date());

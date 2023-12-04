@@ -3,7 +3,13 @@ const prisma = new PrismaClient();
 
 class ReportRepository {
   static async createReport({
-    kms,
+    JTM,
+    JTR,
+    Gardu,
+    SRAPP,
+    TB9,
+    TB12,
+    TB13,
     description,
     type,
     createdById,
@@ -12,7 +18,13 @@ class ReportRepository {
   }) {
     const report = await prisma.report.create({
       data: {
-        kms,
+        JTM,
+        JTR,
+        Gardu,
+        SRAPP,
+        TB9,
+        TB12,
+        TB13,
         description,
         type,
         createdById,
@@ -39,6 +51,12 @@ class ReportRepository {
     return await prisma.report.findMany({});
   }
 
+  static async getAllReports() {
+    const reports = await prisma.report.findMany();
+
+    return reports;
+  }
+
   static async getReportByType(type) {
     try {
       const report = await prisma.report.findMany({
@@ -48,6 +66,21 @@ class ReportRepository {
       });
       return report;
     } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getReportByCreatedAt({ createdAt }) {
+    try {
+      const reports = await prisma.report.findMany({
+        where: {
+          createdAt: { contains: createdAt },
+        },
+      });
+
+      return reports;
+    } catch (error) {
+      console.error("Error fetching report by report createdAt:", error);
       throw error;
     }
   }

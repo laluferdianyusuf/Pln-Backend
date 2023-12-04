@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider          = "mysql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -29,7 +29,13 @@ model User {
 
 model Report {
   id             Int           @id @default(autoincrement())
-  kms            String
+  JTM            String?
+  JTR            String?
+  Gardu          String?
+  SRAPP          String?
+  TB9            String?
+  TB12           String?
+  TB13           String?
   description    String
   type           ReportType
   createdBy      User          @relation(fields: [createdById], references: [id])

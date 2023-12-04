@@ -2,14 +2,21 @@ const reportService = require("../services/reportService");
 
 const createReport = async (req, res) => {
   try {
-    const { kms, description, type } = req.body;
+    const { JTM, JTR, Gardu, SRAPP, TB9, TB12, TB13, description, type } =
+      req.body;
     const user = req.users.id;
 
     const image = req.file;
     const { status_info, status_code, message, data } =
       await reportService.createReport({
         id: user,
-        kms,
+        JTM,
+        JTR,
+        Gardu,
+        SRAPP,
+        TB9,
+        TB12,
+        TB13,
         description,
         type,
         createdById: user,
@@ -39,6 +46,30 @@ const getReportByUserDivision = async (req, res) => {
   }
 };
 
+const getAllReports = async (req, res, next) => {
+  try {
+    const { status_info, status_code, message, data } =
+      await reportService.getAllReports();
+    res
+      .status(status_code)
+      .send({ status_info: status_info, message: message, data: data });
+  } catch (error) {}
+};
+
+const getReportsByCreatedAt = async (req, res, next) => {
+  try {
+    const { createdAt } = req.params;
+
+    const { status_info, status_code, message, data } =
+      await reportService.getReportByCreatedAt({ createdAt: createdAt });
+    res
+      .status(status_code)
+      .send({ status_info: status_info, message: message, data: data });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getReportByCreatedById = async (req, res) => {
   try {
     const { createdById } = req.params;
@@ -58,4 +89,6 @@ module.exports = {
   createReport,
   getReportByUserDivision,
   getReportByCreatedById,
+  getAllReports,
+  getReportsByCreatedAt,
 };
