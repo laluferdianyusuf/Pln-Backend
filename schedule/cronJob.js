@@ -38,8 +38,7 @@ const dailyCron = async (event, context) => {
         if (saveToDB) {
           const updatedStatus = await userRepository.updateUserStatus(
             user.id,
-            "alpha",
-            "Weekly"
+            "alpha"
           );
           if (updatedStatus) {
             for (const report of reports) {
