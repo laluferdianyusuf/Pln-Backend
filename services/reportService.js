@@ -161,9 +161,8 @@ class ReportService {
           const firstDescription =
             reportsOnDate.length > 0 ? reportsOnDate[0].description : null;
           let No = 0;
-          No++;
           return {
-            No,
+            No: No++,
             Tanggal: formattedDate,
             "Nama Pekerjaan": {
               "JTM (Kms)": JTM,
