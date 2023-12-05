@@ -124,7 +124,7 @@ class ReportService {
         const uniqueDates = Array.from(
           new Set(reports.map((report) => report.createdAt))
         );
-
+        let No = 1;
         const result = uniqueDates.map((Tanggal) => {
           const formattedDate = dayjs(Tanggal).format("D MMMM YYYY");
           const reportsOnDate = reports.filter(
@@ -160,7 +160,7 @@ class ReportService {
           );
           const firstDescription =
             reportsOnDate.length > 0 ? reportsOnDate[0].description : null;
-          let No = 0;
+
           return {
             No: No++,
             Tanggal: formattedDate,
