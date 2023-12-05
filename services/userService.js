@@ -2,6 +2,7 @@ const userRepository = require("../repositories/userRepository");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT, ROLES } = require("../lib/const");
+const ReportRepository = require("../repositories/reportRepository");
 const SALT_ROUND = 10;
 
 class UserService {
@@ -414,6 +415,7 @@ class UserService {
           },
         };
       } else {
+        await ReportRepository.deleteReportByCreatedById(user.id);
         await userRepository.deleteUserById(user.id);
         await userRepository.deleteUserDailyById(user.id);
         await userRepository.deleteMonthlyUsers(user.id);

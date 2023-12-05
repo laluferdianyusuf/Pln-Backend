@@ -311,9 +311,11 @@ class UserRepository {
     }
   }
 
-  static async deleteUsers() {
+  static async deleteUsers({ id }) {
     try {
-      const deletedUser = await prisma.dailyRecap.deleteMany();
+      const deletedUser = await prisma.dailyRecap.deleteMany({
+        where: { userId: id },
+      });
       return deletedUser;
     } catch (error) {
       console.error(`Error deleting user:`, error);
@@ -321,9 +323,11 @@ class UserRepository {
     }
   }
 
-  static async deleteMonthlyUsers() {
+  static async deleteMonthlyUsers({ id }) {
     try {
-      const deletedUser = await prisma.monthlyRecap.deleteMany();
+      const deletedUser = await prisma.monthlyRecap.deleteMany({
+        where: { userID: id },
+      });
       return deletedUser;
     } catch (error) {
       console.error(`Error deleting user:`, error);

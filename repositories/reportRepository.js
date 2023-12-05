@@ -171,6 +171,18 @@ class ReportRepository {
       throw error;
     }
   }
+  static async deleteReportByCreatedById(id) {
+    try {
+      const deletedReport = await prisma.report.deleteMany({
+        where: {
+          createdById: id,
+        },
+      });
+      return deletedReport;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = ReportRepository;
