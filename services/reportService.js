@@ -120,7 +120,7 @@ class ReportService {
   static async getAllReports() {
     try {
       const reports = await reportRepository.getAllReports();
-      if (reports) {
+      if (reports && reports.length > 0) {
         const uniqueDates = Array.from(
           new Set(reports.map((report) => report.createdAt))
         );
