@@ -123,39 +123,55 @@ class ReportService {
         const uniqueDates = Array.from(
           new Set(reports.map((report) => report.createdAt))
         );
+
         let No = 1;
         const result = uniqueDates.map((Tanggal) => {
           const formattedDate = dayjs(Tanggal).format("D MMMM YYYY");
           const reportsOnDate = reports.filter(
             (report) => report.createdAt === Tanggal
           );
-          const JTM = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.JTM),
-            0
+
+          const JTM = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.JTM),
+              0
+            )
           );
-          const JTR = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.JTR),
-            0
+          const JTR = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.JTR),
+              0
+            )
           );
-          const Gardu = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.Gardu),
-            0
+          const Gardu = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.Gardu),
+              0
+            )
           );
-          const SRAPP = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.SRAPP),
-            0
+          const SRAPP = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.SRAPP),
+              0
+            )
           );
-          const totalTB9 = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.TB9),
-            0
+          const totalTB9 = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.TB9),
+              0
+            )
           );
-          const totalTB12 = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.TB12),
-            0
+          const totalTB12 = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.TB12),
+              0
+            )
           );
-          const totalTB13 = reportsOnDate.reduce(
-            (acc, report) => acc + parseInt(report.TB13),
-            0
+          const totalTB13 = parseFloat(
+            reportsOnDate.reduce(
+              (acc, report) => acc + parseFloat(report.TB13),
+              0
+            )
           );
           const firstDescription =
             reportsOnDate.length > 0 ? reportsOnDate[0].description : null;

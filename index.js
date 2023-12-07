@@ -88,25 +88,16 @@ app.get("/v1/api/keep-warm", (req, res) => {
   res.status(200).send("Keeping warm!");
 });
 
-const { dailyCron, weeklyCron, monthlyCron } = require("./schedule/cronJob");
+const cronJob = require("./controllers/cronJobController");
 
 // Endpoint untuk menjalankan tugas harian
-app.get("/api/schedule/daily", async (req, res) => {
-  await dailyCron();
-  res.status(200).send("Daily cron executed");
-});
+app.get("/api/schedule/daily", cronJob.dailyCron);
 
 // Endpoint untuk menjalankan tugas mingguan
-app.get("/api/schedule/weekly", async (req, res) => {
-  await weeklyCron();
-  res.status(200).send("Weekly cron executed");
-});
+app.get("/api/schedule/weekly", cronJob.weeklyCron);
 
 // Endpoint untuk menjalankan tugas bulanan
-app.get("/api/schedule/monthly", async (req, res) => {
-  await monthlyCron();
-  res.status(200).send("Monthly cron executed");
-});
+app.get("/api/schedule/monthly", cronJob.monthlyCron);
 
 // Endpoint untuk menjalankan tugas setiap menit (opsional)
 app.get("/api/schedule/minutes", async (req, res) => {
