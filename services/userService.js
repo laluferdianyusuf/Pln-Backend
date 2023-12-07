@@ -3,7 +3,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT, ROLES } = require("../lib/const");
 const ReportRepository = require("../repositories/reportRepository");
-const cloudinary = require("cloudinary").v2;
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+const cloudinary = require("../utils/cloudinary");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const SALT_ROUND = 10;
 
 class UserService {
@@ -407,6 +412,10 @@ class UserService {
     try {
       const user = await userRepository.getById({ id });
 
+      const nowWITA = dayjs().tz("Asia/Makassar");
+
+      const today = nowWITA.format("dddd D MMMM YYYY");
+
       if (!user) {
         return {
           status_info: false,
@@ -439,11 +448,9 @@ class UserService {
             cloudinaryError
           );
         }
-
-        await ReportRepository.deleteReportById(existingReport.id);
+        await ReportRepository.deleteReportByCreatedById(user.id);
       }
 
-      await ReportRepository.deleteReportByCreatedById(user.id);
       await userRepository.deleteUserById(user.id);
       await userRepository.deleteUserDailyById(user.id);
       await userRepository.deleteMonthlyUsers(user.id);
