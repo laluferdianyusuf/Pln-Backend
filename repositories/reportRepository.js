@@ -71,7 +71,7 @@ class ReportRepository {
   }
 
   static async getReportByCreatedBy({ createdById }) {
-    return await prisma.report.findFirst({
+    return await prisma.report.findMany({
       where: { createdById: parseInt(createdById) },
     });
   }

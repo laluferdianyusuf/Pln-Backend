@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT, ROLES } = require("../lib/const");
 const ReportRepository = require("../repositories/reportRepository");
+const cloudinary = require("cloudinary").v2;
 const SALT_ROUND = 10;
 
 class UserService {
@@ -405,6 +406,7 @@ class UserService {
   static async deleteUserById({ id }) {
     try {
       const user = await userRepository.getById({ id });
+
       if (!user) {
         return {
           status_info: false,
@@ -414,26 +416,53 @@ class UserService {
             user: null,
           },
         };
-      } else {
-        await ReportRepository.deleteReportByCreatedById(user.id);
-        await userRepository.deleteUserById(user.id);
-        await userRepository.deleteUserDailyById(user.id);
-        await userRepository.deleteMonthlyUsers(user.id);
-
-        return {
-          status_info: true,
-          status_code: 200,
-          message: "User deleted successfully",
-          data: {
-            user: user,
-          },
-        };
       }
+
+      const existingReports = await ReportRepository.getReportByCreatedAtAndId({
+        createdById: user.id,
+        createdAt: today,
+      });
+
+      for (const existingReport of existingReports) {
+        const startIndex = existingReport.image.lastIndexOf("/") + 1;
+        const endIndex = existingReport.image.lastIndexOf(".");
+        const imageToDelete = existingReport.image.substring(
+          startIndex,
+          endIndex
+        );
+
+        try {
+          await cloudinary.uploader.destroy(imageToDelete);
+        } catch (cloudinaryError) {
+          console.error(
+            "Error deleting image from Cloudinary:",
+            cloudinaryError
+          );
+        }
+
+        await ReportRepository.deleteReportById(existingReport.id);
+      }
+
+      await ReportRepository.deleteReportByCreatedById(user.id);
+      await userRepository.deleteUserById(user.id);
+      await userRepository.deleteUserDailyById(user.id);
+      await userRepository.deleteMonthlyUsers(user.id);
+
+      return {
+        status_info: true,
+        status_code: 200,
+        message: "User deleted successfully",
+        data: {
+          user: user,
+        },
+      };
     } catch (error) {
+      console.error("Error deleting user:", error);
+
       return {
         status_info: false,
         status_code: 500,
-        message: "Internal Server Error" + error,
+        message: "Internal Server Error",
         data: {
           user: null,
         },

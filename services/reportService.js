@@ -42,26 +42,26 @@ class ReportService {
         pictures = getUsersById.picture;
       }
 
-      if (user.status === "waiting") {
-        const existingReport = await reportRepository.getReportByCreatedAtAndId(
-          {
-            createdById: user.id,
-            createdAt: today,
-          }
-        );
+      // if (user.status === "waiting") {
+      //   const existingReport = await reportRepository.getReportByCreatedAtAndId(
+      //     {
+      //       createdById: user.id,
+      //       createdAt: today,
+      //     }
+      //   );
 
-        if (existingReport && existingReport.length > 0) {
-          const startIndex = existingReport[0].image.lastIndexOf("/") + 1;
-          const endIndex = existingReport[0].image.lastIndexOf(".");
-          const imageToDelete = existingReport[0].image.substring(
-            startIndex,
-            endIndex
-          );
-          const existingReportId = existingReport[0].id;
-          await cloudinary.uploader.destroy(imageToDelete);
-          await reportRepository.deleteReportById(existingReportId);
-        }
-      }
+      //   if (existingReport && existingReport.length > 0) {
+      //     const startIndex = existingReport[0].image.lastIndexOf("/") + 1;
+      //     const endIndex = existingReport[0].image.lastIndexOf(".");
+      //     const imageToDelete = existingReport[0].image.substring(
+      //       startIndex,
+      //       endIndex
+      //     );
+      //     const existingReportId = existingReport[0].id;
+      //     await cloudinary.uploader.destroy(imageToDelete);
+      //     await reportRepository.deleteReportById(existingReportId);
+      //   }
+      // }
 
       if (user.status === "approved") {
         return {
