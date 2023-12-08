@@ -100,10 +100,7 @@ app.get("/api/schedule/weekly", cronJob.weeklyCron);
 app.get("/api/schedule/monthly", cronJob.monthlyCron);
 
 // Endpoint untuk menjalankan tugas setiap menit (opsional)
-app.get("/api/schedule/minutes", async (req, res) => {
-  await dailyCron(); // Ganti dengan fungsi sesuai kebutuhan
-  res.status(200).send("Cron executed every minute");
-});
+app.get("/api/schedule/minutes", cronJob.dailyCron);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);
