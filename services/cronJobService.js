@@ -12,55 +12,57 @@ class CronJob {
   static async dailyCron() {
     try {
       const users = await userRepository.getUsers();
-
       const reports = await reportRepository.getReportByType("HARIAN");
       const nowDays = dayjs().tz("Asia/Makassar");
-
       const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
 
-      for (const user of users) {
-        if (user.division !== "supervisor") {
-          const saveToDB = await userRepository.saveToNewDb({
-            name: user.name,
-            nip: user.nip,
-            division: user.division,
-            email: user.email,
-            password: user.password,
-            phone_number: user.phone_number,
-            address: user.address,
-            role: user.role,
-            status: user.status,
-            days: createdAt,
-            recapType: "MINGGUAN",
-            userId: user.id,
-          });
+      await Promise.all(
+        users.map(async (user) => {
+          if (user.division !== "supervisor") {
+            const saveToDB = await userRepository.saveToNewDb({
+              name: user.name,
+              nip: user.nip,
+              division: user.division,
+              email: user.email,
+              password: user.password,
+              phone_number: user.phone_number,
+              address: user.address,
+              role: user.role,
+              status: user.status,
+              days: createdAt,
+              recapType: "MINGGUAN",
+              userId: user.id,
+            });
 
-          if (saveToDB) {
-            const updatedStatus = await userRepository.updateUserStatus(
-              user.id,
-              "alpha"
-            );
-            if (updatedStatus) {
-              for (const report of reports) {
-                const dailyUsers = await userRepository.getRecapUsers();
-                const monthlyUsers =
-                  await userRepository.getMonthlyRecapUsers();
-                await reportRepository.updateReportType(
-                  report.id,
-                  "MINGGUAN",
-                  dailyUsers.id,
-                  monthlyUsers.id
+            if (saveToDB) {
+              const updatedStatus = await userRepository.updateUserStatus(
+                user.id,
+                "alpha"
+              );
+              if (updatedStatus) {
+                await Promise.all(
+                  reports.map(async (report) => {
+                    const dailyUsers = await userRepository.getRecapUsers();
+                    const monthlyUsers =
+                      await userRepository.getMonthlyRecapUsers();
+                    await reportRepository.updateReportType(
+                      report.id,
+                      "MINGGUAN",
+                      dailyUsers.id,
+                      monthlyUsers.id
+                    );
+                  })
                 );
+                console.log("updated");
               }
-              console.log("updated");
+            } else {
+              console.log("no data to update");
             }
           } else {
-            console.log("no data to update");
+            console.log("user is supervisor, skipping");
           }
-        } else {
-          console.log("user is supervisor, skipping");
-        }
-      }
+        })
+      );
     } catch (error) {
       console.log("Internal server error", error);
     }
