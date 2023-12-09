@@ -12,8 +12,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
       - name: Install dependencies
         run: npm install
+
+      - name: Print Directory Contents (Debug)
+        run: ls -R
 
       - name: Run Job 1
         run: node cron/dailyCron.js
