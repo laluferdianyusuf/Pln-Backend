@@ -47,7 +47,7 @@ const dailyCron = async (event, context) => {
               await reportRepository.updateReportType(
                 report.id,
                 "MINGGUAN",
-                dailyUsers.id,
+                saveToDB.id,
                 monthlyUsers.id
               );
             }
