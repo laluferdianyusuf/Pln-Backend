@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Run Job 1
-        run: node schedule/daily.js
+        run: node cron/dailyCron.js
 
   job2:
     runs-on: ubuntu-latest
