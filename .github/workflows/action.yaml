@@ -1,0 +1,59 @@
+name: Node.js Cron Jobs
+
+on:
+  schedule:
+    - cron: "* * * * *" # Cron job setiap hari pukul 00:00 UTC
+    - cron: "0 12 * * *" # Cron job setiap hari pukul 12:00 UTC
+    - cron: "0 18 * * *" # Cron job setiap hari pukul 18:00 UTC
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Job 1
+        run: node schedule/daily.js
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Job 2
+        run: node your-script2.js
+
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Job 3
+        run: node your-script3.js

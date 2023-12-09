@@ -11,32 +11,16 @@ dayjs.extend(timezone);
 class CronJob {
   static async dailyCron() {
     try {
-      // Tahap 1: Ambil data pengguna
       const users = await userRepository.getUsers();
 
-      // Tahap 2: Ambil data laporan
       const reports = await reportRepository.getReportByType("HARIAN");
+      const nowDays = dayjs().tz("Asia/Makassar");
 
-      // Tahap 3: Simpan ke database dan update status pengguna
-      await this.processUserAndStatus(users);
+      const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
 
-      // Tahap 4: Update tipe laporan
-      await this.updateReportType(reports);
-
-      console.log("updated");
-    } catch (error) {
-      console.log("Internal server error", error);
-    }
-  }
-
-  static async processUserAndStatus(users) {
-    const nowDays = dayjs().tz("Asia/Makassar");
-    const createdAt = nowDays.format("dddd D MMMM YYYY HH:mm");
-
-    return Promise.all(
-      users.map(async (user) => {
+      for (const user of users) {
         if (user.division !== "supervisor") {
-          await userRepository.saveToNewDb({
+          const saveToDB = await userRepository.saveToNewDb({
             name: user.name,
             nip: user.nip,
             division: user.division,
@@ -51,27 +35,35 @@ class CronJob {
             userId: user.id,
           });
 
-          await userRepository.updateUserStatus(user.id, "alpha");
+          if (saveToDB) {
+            const updatedStatus = await userRepository.updateUserStatus(
+              user.id,
+              "alpha"
+            );
+            if (updatedStatus) {
+              for (const report of reports) {
+                const dailyUsers = await userRepository.getRecapUsers();
+                const monthlyUsers =
+                  await userRepository.getMonthlyRecapUsers();
+                await reportRepository.updateReportType(
+                  report.id,
+                  "MINGGUAN",
+                  dailyUsers.id,
+                  monthlyUsers.id
+                );
+              }
+              console.log("updated");
+            }
+          } else {
+            console.log("no data to update");
+          }
         } else {
           console.log("user is supervisor, skipping");
         }
-      })
-    );
-  }
-
-  static async updateReportType(reports) {
-    return Promise.all(
-      reports.map(async (report) => {
-        const dailyUsers = await userRepository.getRecapUsers();
-        const monthlyUsers = await userRepository.getMonthlyRecapUsers();
-        await reportRepository.updateReportType(
-          report.id,
-          "MINGGUAN",
-          dailyUsers.id,
-          monthlyUsers.id
-        );
-      })
-    );
+      }
+    } catch (error) {
+      console.log("Internal server error", error);
+    }
   }
 
   static async weeklyCron() {
