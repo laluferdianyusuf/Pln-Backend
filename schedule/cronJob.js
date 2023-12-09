@@ -112,7 +112,7 @@ const monthlyCron = async (event, context) => {
     const user = await userRepository.getUsersByReportType("BULANAN");
 
     for (const users of user) {
-      await userRepository.deleteMonthlyUsers();
+      await userRepository.deleteMonthlyUsers(users.id);
       await reportRepository.deleteReport("BULANAN");
     }
 
