@@ -5,7 +5,7 @@ on:
     - cron: '50 23 * * *'
     - cron: '54 23 * * 0'
     - cron: '0 0 1 * *'
-  workflow_dispatch:
+    - cron: '45 7 * * *'
 
 jobs:
   run-cron:
@@ -28,12 +28,15 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Cron Job
-        run: |
-          if [ "${{ github.event.schedule }}" == '50 23 * * *' ]; then
-            node cron/dailyCron.js
-          elif [ "${{ github.event.schedule }}" == '54 23 * * 0' ]; then
-            node cron/weeklyCron.js
-          elif [ "${{ github.event.schedule }}" == '0 0 1 * *' ]; then
-            node cron/monthlyCron.js
-          fi
+      - name: Run Daily Cron
+        if: github.event.schedule === '50 23 * * *'
+        run: node cron/dailyCron.js
+      - name: Run Weekly Cron
+        if: github.event.schedule === '54 23 * * 0'
+        run: node cron/weeklyCron.js
+      - name: Run Monthly Cron
+        if: github.event.schedule === '0 0 1 * *'
+        run: node cron/monthlyCron.js
+      - name: Run Test Cron
+        if: github.event.schedule === '50 7 * * *'
+        run: node cron/dailyCron.js
