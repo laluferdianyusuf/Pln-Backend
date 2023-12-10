@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  run-cron:
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,14 +28,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Daily Cron Job
-        if: github.event.schedule == '50 23 * * *'
-        run: node cron/dailyCron.js
-
-      - name: Run Weekly Cron Job
-        if: github.event.schedule == '54 23 * * 0'
-        run: node cron/weeklyCron.js
-
-      - name: Run Monthly Cron Job
-        if: github.event.schedule == '0 0 1 * *'
-        run: node cron/monthlyCron.js
+      - name: Run Cron Job
+        run: |
+          if [ "${{ github.event.schedule }}" == '50 23 * * *' ]; then
+            node cron/dailyCron.js
+          elif [ "${{ github.event.schedule }}" == '54 23 * * 0' ]; then
+            node cron/weeklyCron.js
+          elif [ "${{ github.event.schedule }}" == '0 0 1 * *' ]; then
+            node cron/monthlyCron.js
+          fi
