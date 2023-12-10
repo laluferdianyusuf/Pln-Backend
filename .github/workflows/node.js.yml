@@ -3,7 +3,7 @@ name: Cron job
 on:
   schedule:
     - cron: '50 23 * * *'
-    - cron: '59 23 * * 0'
+    - cron: '54 23 * * 0'
     - cron: '0 0 1 * *'
   workflow_dispatch:
 
@@ -33,7 +33,7 @@ jobs:
         run: node cron/dailyCron.js
 
       - name: Run Weekly Cron Job
-        if: github.event.schedule == '59 23 * * 0'
+        if: github.event.schedule == '54 23 * * 0'
         run: node cron/weeklyCron.js
 
       - name: Run Monthly Cron Job
