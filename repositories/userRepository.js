@@ -129,13 +129,11 @@ class UserRepository {
           status: data.status,
           days: data.days,
           recapType: data.recapType,
-          userId: data.userId,
         },
       });
       return user;
     } catch (error) {
-      console.log("no data to save");
-      // throw error;
+      console.log("Error creating MonthlyRecap:", error);
     }
   }
 
@@ -311,11 +309,9 @@ class UserRepository {
     }
   }
 
-  static async deleteUsers({ id }) {
+  static async deleteUsers() {
     try {
-      const deletedUser = await prisma.dailyRecap.deleteMany({
-        where: { userId: id },
-      });
+      const deletedUser = await prisma.dailyRecap.deleteMany();
       return deletedUser;
     } catch (error) {
       console.error(`Error deleting user:`, error);

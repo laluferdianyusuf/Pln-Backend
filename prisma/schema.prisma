@@ -12,19 +12,18 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
   nip          String
   division     String
-  email        String         @unique
+  email        String       @unique
   password     String
   phone_number String
   address      String
-  role         String         @default("employee")
-  status       String         @default("alpha")
+  role         String       @default("employee")
+  status       String       @default("alpha")
   reports      Report[]
   recap        DailyRecap[]
-  monthly      MonthlyRecap[]
 }
 
 model Report {
@@ -79,8 +78,6 @@ model MonthlyRecap {
   status       String
   days         String
   recapType    String
-  User         User?    @relation(fields: [userId], references: [id])
-  userId       Int?
   report       Report[]
 }
 

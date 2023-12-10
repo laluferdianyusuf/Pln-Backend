@@ -12,7 +12,6 @@ const dailyCron = async (event, context) => {
   console.log("daily schedule");
   try {
     const users = await userRepository.getUsers();
-
     const reports = await reportRepository.getReportByType("HARIAN");
     const nowDays = dayjs().tz("Asia/Makassar");
 
@@ -20,7 +19,7 @@ const dailyCron = async (event, context) => {
 
     for (const user of users) {
       if (user.division !== "supervisor") {
-        const saveToDB = await userRepository.saveToNewDb({
+        const savedUser = await userRepository.saveToNewDb({
           name: user.name,
           nip: user.nip,
           division: user.division,
@@ -35,21 +34,20 @@ const dailyCron = async (event, context) => {
           userId: user.id,
         });
 
-        if (saveToDB) {
+        if (savedUser) {
           const updatedStatus = await userRepository.updateUserStatus(
             user.id,
             "alpha"
           );
           if (updatedStatus) {
             for (const report of reports) {
-              const dailyUsers = await userRepository.getRecapUsers();
-              const monthlyUsers = await userRepository.getMonthlyRecapUsers();
-              await reportRepository.updateReportType(
-                report.id,
-                "MINGGUAN",
-                saveToDB.id,
-                monthlyUsers.id
-              );
+              if (report.createdById === user.id) {
+                await reportRepository.updateReportType(
+                  report.id,
+                  "MINGGUAN",
+                  savedUser.id
+                );
+              }
             }
           }
           console.log("updated");
@@ -72,6 +70,7 @@ const weeklyCron = async (event, context) => {
   console.log("weekly schedule");
   try {
     const users = await userRepository.getRecapUsers();
+    const me = await userRepository.getUsers();
     const reports = await reportRepository.getReportByType("MINGGUAN");
 
     for (const user of users) {
@@ -87,16 +86,27 @@ const weeklyCron = async (event, context) => {
         status: user.status,
         days: user.days,
         recapType: "BULANAN",
-        userId: user.id,
       });
       if (saveToDB) {
-        await userRepository.deleteUsers();
+        for (const mes of me) {
+          for (const report of reports) {
+            if (report.createdById === mes.id) {
+              const updatedStatus = await reportRepository.updateReportType(
+                report.id,
+                "BULANAN",
+                null,
+                saveToDB.id
+              );
+              if (updatedStatus) {
+                await userRepository.deleteUsers();
+              }
+            }
+          }
+        }
+        console.log("success");
       } else {
         console.log("no data to save");
       }
-    }
-    for (const report of reports) {
-      await reportRepository.updateReportType(report.id, "BULANAN");
     }
     console.log("updated");
   } catch (error) {
