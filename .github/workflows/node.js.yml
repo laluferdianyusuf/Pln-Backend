@@ -38,5 +38,5 @@ jobs:
         if: github.event.schedule === '0 0 1 * *'
         run: node cron/monthlyCron.js
       - name: Run Test Cron
-        if: github.event.schedule === '50 7 * * *'
-        run: node cron/dailyCron.js
+        if: github.event.schedule === '45 7 * * *'
+        run: echo "Berjalan"
