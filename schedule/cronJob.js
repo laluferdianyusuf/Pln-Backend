@@ -42,7 +42,7 @@ const dailyCron = async (event, context) => {
           if (updatedStatus) {
             for (const report of reports) {
               if (report.createdById === user.id) {
-                await reportRepository.updateReportType(
+                await reportRepository.updateReportTypeAndDaily(
                   report.id,
                   "MINGGUAN",
                   savedUser.id
@@ -70,7 +70,6 @@ const weeklyCron = async (event, context) => {
   console.log("weekly schedule");
   try {
     const users = await userRepository.getRecapUsers();
-    const me = await userRepository.getUsers();
     const reports = await reportRepository.getReportByType("MINGGUAN");
 
     for (const user of users) {
@@ -88,18 +87,16 @@ const weeklyCron = async (event, context) => {
         recapType: "BULANAN",
       });
       if (saveToDB) {
-        for (const mes of me) {
-          for (const report of reports) {
-            if (report.createdById === mes.id) {
-              const updatedStatus = await reportRepository.updateReportType(
+        for (const report of reports) {
+          if (report.dailyRecapId === user.id) {
+            const updatedStatus =
+              await reportRepository.updateReportTypeAndMonthly(
                 report.id,
                 "BULANAN",
-                null,
                 saveToDB.id
               );
-              if (updatedStatus) {
-                await userRepository.deleteUsers();
-              }
+            if (updatedStatus) {
+              await userRepository.deleteUsers();
             }
           }
         }

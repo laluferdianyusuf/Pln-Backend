@@ -48,7 +48,7 @@ model Report {
 }
 
 model DailyRecap {
-  id           Int      @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   nip          String
   division     String
@@ -60,13 +60,14 @@ model DailyRecap {
   status       String
   days         String
   recapType    String
-  User         User?    @relation(fields: [userId], references: [id])
+  User         User?          @relation(fields: [userId], references: [id])
   userId       Int?
   report       Report[]
+  monthly      MonthlyRecap[]
 }
 
 model MonthlyRecap {
-  id           Int      @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String
   nip          String
   division     String
@@ -78,6 +79,8 @@ model MonthlyRecap {
   status       String
   days         String
   recapType    String
+  Recap        DailyRecap? @relation(fields: [recapId], references: [id])
+  recapId      Int?
   report       Report[]
 }
 

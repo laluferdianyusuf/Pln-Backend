@@ -129,7 +129,7 @@ class ReportRepository {
     }
   }
 
-  static async updateReportType(reportId, newType, newDailyId, newMonthlyId) {
+  static async updateReportTypeAndDaily(reportId, newType, newDailyId) {
     try {
       const updatedReport = await prisma.report.update({
         where: {
@@ -138,6 +138,21 @@ class ReportRepository {
         data: {
           type: newType,
           dailyRecapId: newDailyId,
+        },
+      });
+      return updatedReport;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async updateReportTypeAndMonthly(reportId, newType, newMonthlyId) {
+    try {
+      const updatedReport = await prisma.report.update({
+        where: {
+          id: reportId,
+        },
+        data: {
+          type: newType,
           monthlyRecapId: newMonthlyId,
         },
       });
