@@ -2,8 +2,8 @@ name: Cron job
 
 on:
   schedule:
-    - cron: '50 23 * * *'
-    - cron: '54 23 * * 0'
+    - cron: '30 23 * * *'
+    - cron: '31 23 * * 0'
     - cron: '0 0 1 * *'
     - cron: '45 7 * * *'
 
@@ -29,10 +29,10 @@ jobs:
         run: npm install
 
       - name: Run Daily Cron
-        if: github.event.schedule == '50 23 * * *'
+        if: github.event.schedule == '30 23 * * *'
         run: node cron/dailyCron.js
       - name: Run Weekly Cron
-        if: github.event.schedule == '54 23 * * 0'
+        if: github.event.schedule == '31 23 * * 0'
         run: node cron/weeklyCron.js
       - name: Run Monthly Cron
         if: github.event.schedule == '0 0 1 * *'
