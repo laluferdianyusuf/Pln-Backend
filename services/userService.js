@@ -529,7 +529,7 @@ class UserService {
       } else {
         return {
           status_info: false,
-          status_code: 401,
+          status_code: 404,
           message: "No Users",
           data: null,
         };
@@ -564,7 +564,7 @@ class UserService {
       } else {
         return {
           status_info: false,
-          status_code: 401,
+          status_code: 404,
           message: "No Users",
           data: null,
         };
