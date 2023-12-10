@@ -85,6 +85,7 @@ const weeklyCron = async (event, context) => {
         status: user.status,
         days: user.days,
         recapType: "BULANAN",
+        recapId: user.id,
       });
       if (saveToDB) {
         for (const report of reports) {

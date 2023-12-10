@@ -75,6 +75,16 @@ class ReportRepository {
       where: { createdById: parseInt(createdById) },
     });
   }
+  static async getReportByRecapId({ dailyRecapId }) {
+    return await prisma.report.findMany({
+      where: { dailyRecapId: parseInt(dailyRecapId) },
+    });
+  }
+  static async getReportByMonthlyId({ monthlyRecapId }) {
+    return await prisma.report.findMany({
+      where: { monthlyRecapId: parseInt(monthlyRecapId) },
+    });
+  }
 
   static async getAllReportsByDivision() {
     return await prisma.report.findMany({});
@@ -114,6 +124,7 @@ class ReportRepository {
       throw error;
     }
   }
+
   static async getReportByCreatedAt({ createdAt }) {
     try {
       const reports = await prisma.report.findMany({
@@ -145,6 +156,7 @@ class ReportRepository {
       throw error;
     }
   }
+
   static async updateReportTypeAndMonthly(reportId, newType, newMonthlyId) {
     try {
       const updatedReport = await prisma.report.update({

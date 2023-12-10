@@ -230,6 +230,13 @@ class ReportService {
         message: "Success",
         data: report,
       };
+    } else {
+      return {
+        status_info: false,
+        status_code: 404,
+        message: "No data found",
+        data: null,
+      };
     }
   }
 
@@ -239,7 +246,7 @@ class ReportService {
         createdAt,
       });
 
-      if (reports) {
+      if (reports && reports.length > 0) {
         return {
           status_info: true,
           status_code: 200,
@@ -250,7 +257,7 @@ class ReportService {
         return {
           status_info: false,
           status_code: 404,
-          message: "Not Found",
+          message: "No data found",
           data: null,
         };
       }
@@ -270,7 +277,7 @@ class ReportService {
       createdById: createdById,
     });
 
-    if (report) {
+    if (report && report.length > 0) {
       return {
         status_info: true,
         status_code: 200,
@@ -281,7 +288,49 @@ class ReportService {
       return {
         status_info: false,
         status_code: 400,
-        message: "Failed",
+        message: "No data found",
+        data: null,
+      };
+    }
+  }
+  static async getReportByRecapId({ dailyRecapId }) {
+    const report = await reportRepository.getReportByRecapId({
+      dailyRecapId: dailyRecapId,
+    });
+
+    if (report && report.length > 0) {
+      return {
+        status_info: true,
+        status_code: 200,
+        message: "Success",
+        data: report,
+      };
+    } else {
+      return {
+        status_info: false,
+        status_code: 400,
+        message: "No data found",
+        data: null,
+      };
+    }
+  }
+  static async getReportByMonthlyId({ monthlyRecapId }) {
+    const report = await reportRepository.getReportByMonthlyId({
+      monthlyRecapId: monthlyRecapId,
+    });
+
+    if (report && report.length > 0) {
+      return {
+        status_info: true,
+        status_code: 200,
+        message: "Success",
+        data: report,
+      };
+    } else {
+      return {
+        status_info: false,
+        status_code: 400,
+        message: "No data found",
         data: null,
       };
     }

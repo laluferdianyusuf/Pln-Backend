@@ -78,29 +78,18 @@ app.get("/v2/api/reports/:division", reportController.getReportByUserDivision);
 
 app.get("/v2/api/search/:createdById", reportController.getReportByCreatedById);
 app.get(
+  "/v2/api/daily/search/:dailyRecapId",
+  reportController.getReportByRecapId
+);
+app.get(
+  "/v2/api/monthly/search/:monthlyRecapId",
+  reportController.getReportByMonthlyId
+);
+app.get(
   "/v2/api/reports/by/:createdAt",
   reportController.getReportsByCreatedAt
 );
 app.get("/v2/api/reports", reportController.getAllReports);
-
-app.get("/v1/api/keep-warm", (req, res) => {
-  console.log("Keep warm request received at:", new Date());
-  res.status(200).send("Keeping warm!");
-});
-
-const cronJob = require("./controllers/cronJobController");
-
-// Endpoint untuk menjalankan tugas harian
-app.get("/api/schedule/daily", cronJob.dailyCron);
-
-// Endpoint untuk menjalankan tugas mingguan
-app.get("/api/schedule/weekly", cronJob.weeklyCron);
-
-// Endpoint untuk menjalankan tugas bulanan
-app.get("/api/schedule/monthly", cronJob.monthlyCron);
-
-// Endpoint untuk menjalankan tugas setiap menit (opsional)
-app.get("/api/schedule/minutes", cronJob.dailyCron);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);

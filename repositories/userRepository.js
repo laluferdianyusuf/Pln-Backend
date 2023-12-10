@@ -129,6 +129,7 @@ class UserRepository {
           status: data.status,
           days: data.days,
           recapType: data.recapType,
+          recapId: data.recapId,
         },
       });
       return user;

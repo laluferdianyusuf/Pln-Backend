@@ -325,7 +325,7 @@ class UserService {
       division: divisionsArray,
     });
 
-    if (user) {
+    if (user && user.length > 0) {
       return {
         status_info: true,
         status_code: 200,
@@ -335,8 +335,8 @@ class UserService {
     } else {
       return {
         status_info: false,
-        status_code: 400,
-        message: "Failed",
+        status_code: 404,
+        message: "No Users",
         data: null,
       };
     }
@@ -345,12 +345,19 @@ class UserService {
   static async getUserById({ id }) {
     const user = await userRepository.getById({ id });
 
-    if (user) {
+    if (user && user.length > 0) {
       return {
         status_info: true,
         status_code: 200,
         message: "Success",
         data: user,
+      };
+    } else {
+      return {
+        status_info: false,
+        status_code: 404,
+        message: "No Users",
+        data: null,
       };
     }
   }
@@ -358,12 +365,19 @@ class UserService {
   static async getRecapUserDivision({ division }) {
     const user = await userRepository.getRecapByDivision({ division });
 
-    if (user) {
+    if (user && user.length > 0) {
       return {
         status_info: true,
         status_code: 200,
         message: "Success",
         data: user,
+      };
+    } else {
+      return {
+        status_info: false,
+        status_code: 404,
+        message: "No users",
+        data: null,
       };
     }
   }
@@ -480,12 +494,19 @@ class UserService {
   static async getUsersByReportType({ reportType }) {
     const user = await userRepository.getUsersByReportType({ reportType });
 
-    if (user) {
+    if (user && user.length > 0) {
       return {
         status_info: true,
         status_code: 200,
         message: "Success",
         data: user,
+      };
+    } else {
+      return {
+        status_info: false,
+        status_code: 404,
+        message: "No users",
+        data: null,
       };
     }
   }
@@ -498,7 +519,7 @@ class UserService {
         division: divisionsArray,
       });
 
-      if (users) {
+      if (users && users.length > 0) {
         return {
           status_info: true,
           status_code: 200,
@@ -533,7 +554,7 @@ class UserService {
         division: divisionsArray,
       });
 
-      if (users) {
+      if (users && users.length > 0) {
         return {
           status_info: true,
           status_code: 200,
