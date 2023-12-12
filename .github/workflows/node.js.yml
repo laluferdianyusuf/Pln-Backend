@@ -29,17 +29,17 @@ jobs:
         run: npm install
 
       - name: Run Daily Cron
-        if: runner.os == 'Linux' && github.event_name == 'schedule' && startsWith(github.event.schedule, '30 23')
+        if: runner.os == 'Linux' && github.event_name == 'schedule' && github.event.schedule == '30 23 * * *'
         run: node cron/dailyCron.js
 
       - name: Run Weekly Cron
-        if: runner.os == 'Linux' && github.event_name == 'schedule' && startsWith(github.event.schedule, '31 23')
+        if: runner.os == 'Linux' && github.event_name == 'schedule' && github.event.schedule == '31 23 * * 0'
         run: node cron/weeklyCron.js
 
       - name: Run Monthly Cron
-        if: runner.os == 'Linux' && github.event_name == 'schedule' && startsWith(github.event.schedule, '0 0')
+        if: runner.os == 'Linux' && github.event_name == 'schedule' && github.event.schedule == '0 0 1 * *'
         run: node cron/monthlyCron.js
 
       - name: Run Test Cron
-        if: runner.os == 'Linux' && github.event_name == 'schedule' && startsWith(github.event.schedule, '45 7')
+        if: runner.os == 'Linux' && github.event_name == 'schedule' && github.event.schedule == '45 7 * * *'
         run: echo "Berjalan"
