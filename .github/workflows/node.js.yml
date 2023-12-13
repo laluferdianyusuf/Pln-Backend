@@ -65,4 +65,5 @@ jobs:
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
           github.event.schedule == '*/5 * * * *'
-        run: echo 'Current Time :$(date)'
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%s')"
