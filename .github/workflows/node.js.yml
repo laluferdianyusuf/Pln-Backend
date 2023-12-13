@@ -6,6 +6,7 @@ on:
     - cron: '31 23 * * 0'
     - cron: '0 0 1 * *'
     - cron: '45 7 * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   run-cron:
@@ -55,3 +56,10 @@ jobs:
           github.event_name == 'schedule' &&
           github.event.schedule == '45 7 * * *'
         run: echo "Berjalan"
+
+      - name: Run every 5th minute
+        if: |
+          runner.os == 'Linux' &&
+          github.event_name == 'schedule' &&
+          github.event.schedule == '*/5 * * * *'
+        run: "echo 'Current Time : $(date)'"
