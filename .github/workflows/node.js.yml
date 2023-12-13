@@ -6,6 +6,7 @@ on:
     - cron: '31 15 * * 0'
     - cron: '0 16 1 * *'
     - cron: '45 23 * * *'
+    - cron: '10 12 * * *'
 
 jobs:
   run-cron:
@@ -58,3 +59,10 @@ jobs:
           github.event_name == 'schedule' &&
           github.event.schedule == '45 23 * * *'
         run: echo "Berjalan"
+
+      - name: Run Test Cron 2
+        if: |
+          runner.os == 'Linux' &&
+          github.event_name == 'schedule' &&
+          github.event.schedule == '10 12 * * *'
+        run: echo "Berjalan di jam 20.10"
