@@ -2,10 +2,10 @@ name: Cron job
 
 on:
   schedule:
-    - cron: '30 23 * * *'
-    - cron: '31 23 * * 0'
-    - cron: '0 0 1 * *'
-    - cron: '45 7 * * *'
+    - cron: '30 15 * * *'
+    - cron: '31 15 * * 0'
+    - cron: '0 16 1 * *'
+    - cron: '45 23 * * *'
     - cron: '*/5 * * * *'
 
 jobs:
@@ -36,34 +36,26 @@ jobs:
         if: |
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
-          github.event.schedule == '30 23 * * *'
+          github.event.schedule == '30 15 * * *'
         run: node cron/dailyCron.js
 
       - name: Run Weekly Cron
         if: |
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
-          github.event.schedule == '31 23 * * 0'
+          github.event.schedule == '31 15 * * 0'
         run: node cron/weeklyCron.js
 
       - name: Run Monthly Cron
         if: |
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
-          github.event.schedule == '0 0 1 * *'
+          github.event.schedule == '0 16 1 * *'
         run: node cron/monthlyCron.js
 
       - name: Run Test Cron
         if: |
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
-          github.event.schedule == '45 7 * * *'
+          github.event.schedule == '45 23 * * *'
         run: echo "Berjalan"
-
-      - name: Run every 5th minute
-        if: |
-          runner.os == 'Linux' &&
-          github.event_name == 'schedule' &&
-          github.event.schedule == '*/5 * * * *'
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%s')"
