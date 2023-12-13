@@ -65,4 +65,4 @@ jobs:
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
           github.event.schedule == '*/5 * * * *'
-        run: "echo 'Current Time : $(date)'"
+        run: echo 'Current Time :$(date)'
