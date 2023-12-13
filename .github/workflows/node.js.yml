@@ -6,7 +6,6 @@ on:
     - cron: '31 15 * * 0'
     - cron: '0 16 1 * *'
     - cron: '45 23 * * *'
-    - cron: '*/5 * * * *'
 
 jobs:
   run-cron:
