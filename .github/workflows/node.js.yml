@@ -2,10 +2,9 @@ name: Cron job
 
 on:
   schedule:
-    - cron: '50 23 * * *'
-    - cron: '54 23 * * 0'
-    - cron: '0 0 1 * *'
-  workflow_dispatch:
+    - cron: '30 15 * * *'
+    - cron: '31 15 * * 0'
+    - cron: '0 16 1 * *'
 
 jobs:
   run-cron:
@@ -16,6 +15,9 @@ jobs:
         node-version: [16.x]
 
     steps:
+      - name: Set WITA timezone
+        run: sudo timedatectl set-timezone Asia/Makassar
+        
       - name: Checkout Repository
         uses: actions/checkout@v3
 
@@ -28,12 +30,23 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Cron Job
-        run: |
-          if [ "${{ github.event.schedule }}" == '50 23 * * *' ]; then
-            node cron/dailyCron.js
-          elif [ "${{ github.event.schedule }}" == '54 23 * * 0' ]; then
-            node cron/weeklyCron.js
-          elif [ "${{ github.event.schedule }}" == '0 0 1 * *' ]; then
-            node cron/monthlyCron.js
-          fi
+      - name: Run Daily Cron
+        if: |
+          runner.os == 'Linux' &&
+          github.event_name == 'schedule' &&
+          github.event.schedule == '30 15 * * *'
+        run: node cron/dailyCron.js
+
+      - name: Run Weekly Cron
+        if: |
+          runner.os == 'Linux' &&
+          github.event_name == 'schedule' &&
+          github.event.schedule == '31 15 * * 0'
+        run: node cron/weeklyCron.js
+
+      - name: Run Monthly Cron
+        if: |
+          runner.os == 'Linux' &&
+          github.event_name == 'schedule' &&
+          github.event.schedule == '0 16 1 * *'
+        run: node cron/monthlyCron.js
