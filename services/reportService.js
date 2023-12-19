@@ -149,7 +149,7 @@ class ReportService {
                 "D MMMM YYYY HH:mm"
               ).format("HH:mm");
 
-              const userResult = await Promise.all(
+              const users = await Promise.all(
                 Object.entries(userReportsByDate).map(
                   async ([userKey, userReports]) => {
                     // Sort reports for each user and date by createdAt
@@ -159,29 +159,27 @@ class ReportService {
 
                     const user = await userRepository.getById({ id: userKey });
 
-                    const userReportsResult = userReports.map(
-                      (report, index) => {
-                        return {
-                          Jam: formattedDateTanggal,
-                          "Nama Pekerjaan": {
-                            "JTM (Kms)": parseFloat(report.JTM),
-                            "Gardu (Unit)": parseFloat(report.Gardu),
-                            "JTR (Kms)": parseFloat(report.JTR),
-                            "SR/APP (Pelanggan)": parseFloat(report.SRAPP),
-                            "TIANG BETON": {
-                              "9 Meter (BTG)": parseFloat(report.TB9),
-                              "12 Meter (BTG)": parseFloat(report.TB12),
-                              "13 Meter (BTG)": parseFloat(report.TB13),
-                            },
+                    const reports = userReports.map((report, index) => {
+                      return {
+                        Jam: formattedDateTanggal,
+                        "Nama Pekerjaan": {
+                          "JTM (Kms)": parseFloat(report.JTM),
+                          "Gardu (Unit)": parseFloat(report.Gardu),
+                          "JTR (Kms)": parseFloat(report.JTR),
+                          "SR/APP (Pelanggan)": parseFloat(report.SRAPP),
+                          "TIANG BETON": {
+                            "9 Meter (BTG)": parseFloat(report.TB9),
+                            "12 Meter (BTG)": parseFloat(report.TB12),
+                            "13 Meter (BTG)": parseFloat(report.TB13),
                           },
-                          DESCRIPTION: report.description,
-                        };
-                      }
-                    );
+                        },
+                        DESCRIPTION: report.description,
+                      };
+                    });
 
                     return {
                       createdBy: user.name,
-                      reports: userReportsResult,
+                      reports,
                     };
                   }
                 )
@@ -190,7 +188,7 @@ class ReportService {
               return {
                 No: indexes + 1,
                 Date: formattedDate,
-                users: userResult,
+                users,
               };
             }
           )
