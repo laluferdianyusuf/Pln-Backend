@@ -135,6 +135,26 @@ const updateUserBySupervisor = async (req, res, next) => {
     .status(status_code)
     .send({ status_info: status_info, message: message, data: data });
 };
+const updateDailyBySupervisor = async (req, res, next) => {
+  const { id } = req.params;
+
+  const { status_info, status_code, message, data } =
+    await userService.updateDailyStatusBySupervisor({ id: id });
+
+  res
+    .status(status_code)
+    .send({ status_info: status_info, message: message, data: data });
+};
+const updateMonthlyBySupervisor = async (req, res, next) => {
+  const { id } = req.params;
+
+  const { status_info, status_code, message, data } =
+    await userService.updateMonthlyStatusBySupervisor({ id: id });
+
+  res
+    .status(status_code)
+    .send({ status_info: status_info, message: message, data: data });
+};
 
 const deleteUserById = async (req, res, next) => {
   const { id } = req.params;
@@ -206,6 +226,8 @@ module.exports = {
   getUserDivision,
   getUserById,
   updateUserBySupervisor,
+  updateDailyBySupervisor,
+  updateMonthlyBySupervisor,
   deleteUserById,
   getUserByReportType,
   getRecapUserDivision,

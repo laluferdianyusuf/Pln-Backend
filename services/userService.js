@@ -421,6 +421,84 @@ class UserService {
       };
     }
   }
+  static async updateDailyStatusBySupervisor({ id }) {
+    try {
+      const user = await userRepository.getDailyById({ id });
+      if (user.status === "waiting") {
+        const updatedUser = await userRepository.updateUserRecapStatus(
+          user.id,
+          "approved"
+        );
+
+        return {
+          status_info: true,
+          status_code: 201,
+          message: "Report Approved",
+          data: updatedUser,
+        };
+      } else if (user.status === "approved") {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "Already Approved",
+          data: null,
+        };
+      } else {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "User not reported yet",
+          data: null,
+        };
+      }
+    } catch (error) {
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Error: " + error.message,
+        data: null,
+      };
+    }
+  }
+  static async updateMonthlyStatusBySupervisor({ id }) {
+    try {
+      const user = await userRepository.getMonthlyById({ id });
+      if (user.status === "waiting") {
+        const updatedUser = await userRepository.updateMonthlyRecapStatus(
+          user.id,
+          "approved"
+        );
+
+        return {
+          status_info: true,
+          status_code: 201,
+          message: "Report Approved",
+          data: updatedUser,
+        };
+      } else if (user.status === "approved") {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "Already Approved",
+          data: null,
+        };
+      } else {
+        return {
+          status_info: false,
+          status_code: 400,
+          message: "User not reported yet",
+          data: null,
+        };
+      }
+    } catch (error) {
+      return {
+        status_info: false,
+        status_code: 500,
+        message: "Error: " + error.message,
+        data: null,
+      };
+    }
+  }
 
   static async deleteUserById({ id }) {
     try {

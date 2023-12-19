@@ -55,6 +55,18 @@ app.put(
   middleware.isSuperAdmin,
   userController.updateUserBySupervisor
 );
+app.put(
+  "/v1/api/update/daily/:id",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.updateDailyBySupervisor
+);
+app.put(
+  "/v1/api/update/monthly/:id",
+  middleware.authenticate,
+  middleware.isSuperAdmin,
+  userController.updateMonthlyBySupervisor
+);
 app.delete("/v1/api/users/delete/:id", userController.deleteUserById);
 app.get("/v1/api/find/:reportType", userController.getUserByReportType);
 app.get(

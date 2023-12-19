@@ -182,6 +182,32 @@ class UserRepository {
       throw error;
     }
   }
+  static async getDailyById({ id }) {
+    try {
+      const userId = parseInt(id);
+      const user = await prisma.dailyRecap.findUnique({
+        where: { id: userId },
+      });
+
+      return user;
+    } catch (error) {
+      console.error("Error retrieving user by ID: ", error);
+      throw error;
+    }
+  }
+  static async getMonthlyById({ id }) {
+    try {
+      const userId = parseInt(id);
+      const user = await prisma.monthlyRecap.findUnique({
+        where: { id: userId },
+      });
+
+      return user;
+    } catch (error) {
+      console.error("Error retrieving user by ID: ", error);
+      throw error;
+    }
+  }
 
   static async getByStatus({ status }) {
     try {
@@ -199,6 +225,18 @@ class UserRepository {
   static async updateUserStatus(userId, newStatus) {
     try {
       const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { status: newStatus },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user status: ", error);
+      throw error;
+    }
+  }
+  static async updateMonthlyRecapStatus(userId, newStatus) {
+    try {
+      const updatedUser = await prisma.monthlyRecap.update({
         where: { id: userId },
         data: { status: newStatus },
       });

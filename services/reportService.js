@@ -120,79 +120,81 @@ class ReportService {
     try {
       const reports = await reportRepository.getAllReports();
       if (reports && reports.length > 0) {
-        const uniqueDates = Array.from(
-          new Set(reports.map((report) => report.createdAt))
+        // Group reports by createdAt and createdBy
+        const reportsByDateAndUser = reports.reduce((acc, report) => {
+          const dateKey = dayjs(report.createdAt).format("D MMMM YYYY HH:mm");
+          const userKey = report.createdById;
+
+          if (!acc[dateKey]) {
+            acc[dateKey] = {};
+          }
+
+          if (!acc[dateKey][userKey]) {
+            acc[dateKey][userKey] = [];
+          }
+
+          acc[dateKey][userKey].push(report);
+
+          return acc;
+        }, {});
+
+        const result = await Promise.all(
+          Object.entries(reportsByDateAndUser).map(
+            async ([dateKey, userReportsByDate], indexes) => {
+              const formattedDate = dayjs(dateKey, "D MMMM YYYY HH:mm").format(
+                "D MMMM YYYY HH:mm"
+              );
+              const formattedDateTanggal = dayjs(
+                dateKey,
+                "D MMMM YYYY HH:mm"
+              ).format("HH:mm");
+
+              const userResult = await Promise.all(
+                Object.entries(userReportsByDate).map(
+                  async ([userKey, userReports]) => {
+                    // Sort reports for each user and date by createdAt
+                    userReports.sort(
+                      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+                    );
+
+                    const user = await userRepository.getById({ id: userKey });
+
+                    const userReportsResult = userReports.map(
+                      (report, index) => {
+                        return {
+                          Jam: formattedDateTanggal,
+                          "Nama Pekerjaan": {
+                            "JTM (Kms)": parseFloat(report.JTM),
+                            "Gardu (Unit)": parseFloat(report.Gardu),
+                            "JTR (Kms)": parseFloat(report.JTR),
+                            "SR/APP (Pelanggan)": parseFloat(report.SRAPP),
+                            "TIANG BETON": {
+                              "9 Meter (BTG)": parseFloat(report.TB9),
+                              "12 Meter (BTG)": parseFloat(report.TB12),
+                              "13 Meter (BTG)": parseFloat(report.TB13),
+                            },
+                          },
+                          DESCRIPTION: report.description,
+                        };
+                      }
+                    );
+
+                    return {
+                      createdBy: user.name,
+                      reports: userReportsResult,
+                    };
+                  }
+                )
+              );
+
+              return {
+                No: indexes + 1,
+                Date: formattedDate,
+                users: userResult,
+              };
+            }
+          )
         );
-
-        let No = 1;
-        const result = uniqueDates.map((Tanggal) => {
-          const formattedDate = dayjs(Tanggal).format("D MMMM YYYY");
-          const reportsOnDate = reports.filter(
-            (report) => report.createdAt === Tanggal
-          );
-
-          const JTM = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.JTM),
-              0
-            )
-          );
-          const JTR = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.JTR),
-              0
-            )
-          );
-          const Gardu = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.Gardu),
-              0
-            )
-          );
-          const SRAPP = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.SRAPP),
-              0
-            )
-          );
-          const totalTB9 = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.TB9),
-              0
-            )
-          );
-          const totalTB12 = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.TB12),
-              0
-            )
-          );
-          const totalTB13 = parseFloat(
-            reportsOnDate.reduce(
-              (acc, report) => acc + parseFloat(report.TB13),
-              0
-            )
-          );
-          const firstDescription =
-            reportsOnDate.length > 0 ? reportsOnDate[0].description : null;
-
-          return {
-            No: No++,
-            Tanggal: formattedDate,
-            "Nama Pekerjaan": {
-              "JTM (Kms)": JTM,
-              "Gardu (Unit)": Gardu,
-              "JTR (Kms)": JTR,
-              "SR/APP (Pelanggan)": SRAPP,
-              "TIANG BETON": {
-                "9 Meter (BTG)": totalTB9,
-                "12 Meter (BTG)": totalTB12,
-                "13 Meter (BTG)": totalTB13,
-              },
-            },
-            DESCRIPTION: firstDescription,
-          };
-        });
 
         return {
           status_info: true,
