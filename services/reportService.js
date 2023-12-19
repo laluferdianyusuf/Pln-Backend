@@ -141,8 +141,8 @@ class ReportService {
         const result = await Promise.all(
           Object.entries(reportsByDateAndUser).map(
             async ([dateKey, userReportsByDate], indexes) => {
-              const formattedDate = dayjs(dateKey, "D MMMM YYYY HH:mm").format(
-                "D MMMM YYYY HH:mm"
+              const formattedDate = dayjs(dateKey, "D MMMM YYYY HH:").format(
+                "D MMMM YYYY"
               );
               const formattedDateTanggal = dayjs(
                 dateKey,
