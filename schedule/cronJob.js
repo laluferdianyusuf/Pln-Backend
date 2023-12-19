@@ -87,6 +87,7 @@ const weeklyCron = async (event, context) => {
         recapType: "BULANAN",
         recapId: user.id,
       });
+
       if (saveToDB) {
         for (const report of reports) {
           if (report.dailyRecapId === user.id) {
@@ -97,18 +98,23 @@ const weeklyCron = async (event, context) => {
                 saveToDB.id
               );
             if (updatedStatus) {
-              await userRepository.deleteUsers();
+              console.log("Report updated successfully");
             }
           }
         }
-        console.log("success");
+        console.log("User data saved successfully");
       } else {
-        console.log("no data to save");
+        console.log("No data to save for user");
       }
     }
-    console.log("updated");
+
+    // Now that all data is saved, delete users
+    await userRepository.deleteUsers();
+
+    console.log("All data updated and users deleted");
   } catch (error) {
-    throw error;
+    console.error("An error occurred:", error);
+    // Handle the error appropriately, e.g., log it or throw a new error
   }
 };
 
