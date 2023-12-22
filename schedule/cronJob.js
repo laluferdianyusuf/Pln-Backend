@@ -118,7 +118,7 @@ const weeklyCron = async (event, context) => {
   }
 };
 
-const oneMonthInSeconds = 30 * 24 * 60 * 60;
+const oneMonthInSeconds = 60 * 24 * 60 * 60;
 
 const monthlyCron = async (event, context) => {
   console.log("monthly schedule");
@@ -147,7 +147,7 @@ const monthlyCron = async (event, context) => {
         const publicId = resource.public_id;
 
         try {
-          const result = await cloudinary.uploader.destroy(publicId);
+          await cloudinary.uploader.destroy(publicId);
           console.log(`Deleted from Cloudinary: ${publicId}`);
         } catch (cloudinaryError) {
           console.error("Error deleting from Cloudinary:", cloudinaryError);
