@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '30 15 * * *'
     - cron: '31 15 * * 0'
-    - cron: '0 16 1 * *'
+    - cron: '40 15 3 1,4,7,10 *'
 
 jobs:
   run-cron:
@@ -48,5 +48,5 @@ jobs:
         if: |
           runner.os == 'Linux' &&
           github.event_name == 'schedule' &&
-          github.event.schedule == '0 16 1 * *'
+          github.event.schedule == '40 15 3 1,4,7,10 *'
         run: node cron/monthlyCron.js
