@@ -319,10 +319,10 @@ class UserService {
   }
 
   static async getUserDivision({ division }) {
-    const divisionsArray = division.split("/").map((item) => item.trim());
+    // const divisionsArray = division.split("/").map((item) => item.trim());
 
     const user = await userRepository.getByDivision({
-      division: divisionsArray,
+      division: division,
     });
 
     if (user && user.length > 0) {
@@ -591,10 +591,10 @@ class UserService {
 
   static async getUsersByReportCreatedAt({ reportCreatedAt, division }) {
     try {
-      const divisionsArray = division.split("/").map((item) => item.trim());
+      // const divisionsArray = division.split("/").map((item) => item.trim());
       const users = await userRepository.getUsersByReportCreatedAt({
         reportCreatedAt,
-        division: divisionsArray,
+        division: division,
       });
 
       if (users && users.length > 0) {
@@ -626,10 +626,10 @@ class UserService {
 
   static async getUsersByReportByDay({ day, division }) {
     try {
-      const divisionsArray = division.split("/").map((item) => item.trim());
+      // const divisionsArray = division.split("/").map((item) => item.trim());
       const users = await userRepository.getUsersByReportByDay({
         day,
-        division: divisionsArray,
+        division: division,
       });
 
       if (users && users.length > 0) {

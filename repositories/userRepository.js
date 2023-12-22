@@ -142,9 +142,7 @@ class UserRepository {
     try {
       const users = await prisma.user.findMany({
         where: {
-          division: {
-            in: division,
-          },
+          division: division,
         },
       });
 
@@ -320,7 +318,7 @@ class UserRepository {
       const isoCreatedAt = convertToISODate(reportCreatedAt);
       const users = await prisma.monthlyRecap.findMany({
         where: {
-          division: { in: division },
+          division: division,
           days: { contains: isoCreatedAt },
         },
       });
@@ -336,7 +334,7 @@ class UserRepository {
     try {
       const users = await prisma.dailyRecap.findMany({
         where: {
-          division: { in: division },
+          division: division,
           days: { contains: day },
         },
       });
